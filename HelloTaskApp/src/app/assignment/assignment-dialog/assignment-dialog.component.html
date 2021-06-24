@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>Configure tab {{assignmentName}}</h2>
+<mat-dialog-content class="mat-typography">
+    <p>Change name</p>
+    <mat-form-field>
+        <mat-label>Assignment name</mat-label>
+        <input matInput [(ngModel)]="data.assignmentName">
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button (click)="onDeleteClick()">
+        <mat-icon aria-hidden="false" color="warn">delete</mat-icon>
+    </button>
+    <button mat-button (click)="onNoClick()">Cancel</button>
+    <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Submit</button>
+</mat-dialog-actions>
