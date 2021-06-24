@@ -7434,11 +7434,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Programming\\dotNET\\HelloTask\\HelloTaskAPI\\HelloTask\\HelloTask.csproj",
+      "projectUniqueName": "E:\\Programming\\HelloTask\\HelloTaskAPI\\HelloTask\\HelloTask.csproj",
       "projectName": "HelloTask",
-      "projectPath": "E:\\Programming\\dotNET\\HelloTask\\HelloTaskAPI\\HelloTask\\HelloTask.csproj",
+      "projectPath": "E:\\Programming\\HelloTask\\HelloTaskAPI\\HelloTask\\HelloTask.csproj",
       "packagesPath": "C:\\Users\\Hakej-Laptop\\.nuget\\packages\\",
-      "outputPath": "E:\\Programming\\dotNET\\HelloTask\\HelloTaskAPI\\HelloTask\\obj\\",
+      "outputPath": "E:\\Programming\\HelloTask\\HelloTaskAPI\\HelloTask\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
