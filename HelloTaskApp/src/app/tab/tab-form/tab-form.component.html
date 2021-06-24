@@ -1,0 +1,15 @@
+<mat-card>
+    <form class="example-form" #form="ngForm" (submit)="onSubmit(form)">
+        <h2 *ngIf="service.newTab.id != 0 as value; else elseBlock">Update <div class="update-tab-name">
+                {{service.newTab.name}}</div>:</h2>
+        <ng-template #elseBlock>
+            <h2>Add new tab:</h2>
+        </ng-template>
+        <input type="hidden" name="taskId" [value]="service.newTab.id" />
+        <mat-form-field class="example-full-width">
+            <mat-label>Tab name</mat-label>
+            <input matInput placeholder="Name" name="name" #name="ngModel" [(ngModel)]="service.newTab.name" required>
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Submit</button>
+    </form>
+</mat-card>

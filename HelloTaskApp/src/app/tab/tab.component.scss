@@ -1,0 +1,35 @@
+@import "src/variables.scss";
+
+.selected-tab {
+  background-color: $primary;
+  transition: 0.3s;
+}
+
+.tab {
+  transition: 0.3s;
+}
+
+.tab:hover {
+  background-color: $accent;
+  transition: 0.3s;
+}
+
+.tab-name {
+  transition: 0.3s;
+}
+
+.tab-name:hover {
+  color: $primary;
+  transition: 0.3s;
+}
+
+mat-card {
+  margin-bottom: 10px;
+}
+
+.add-new-assignment-input {
+width: 95%; 
+ margin-left: 5px;
+ margin-top: 2px;
+ margin-bottom: -5px;
+}

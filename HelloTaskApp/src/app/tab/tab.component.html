@@ -1,0 +1,13 @@
+<mat-card [ngClass]="{'tab': !isTabSelected, 'selected-tab': isTabSelected}">
+    <h2 class="tab-name" (click)="selectTab()">{{tab.name}}</h2>
+    <app-assignment (assignmentDelete)="onAssignmentDeleted($event)" *ngFor="let a of tab.assignments" [assignment]="a">
+    </app-assignment>
+    <p>
+        <mat-form-field (keyup.enter)="addAssignment()" appearance="legacy" class="add-new-assignment-input">
+            <mat-label>
+                <mat-icon aria-hidden="false">add</mat-icon>Add new assignment
+            </mat-label>
+            <input #name="ngModel" [(ngModel)]="newAssignment.name" matInput placeholder="Assignment name">
+        </mat-form-field>
+    </p>
+</mat-card>

@@ -1,0 +1,18 @@
+@import "src/variables.scss";
+
+.assignment {
+  transition: 0.3s;
+}
+
+.assignment:hover {
+  color: $primary;
+}
+
+.assignment-selected {
+    background-color: $primary;
+    transition: 0.3s;
+}
+
+mat-card {
+  margin-bottom: 10px;
+}
