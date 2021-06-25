@@ -44,8 +44,8 @@ namespace HelloTask.Controllers
             return tab;
         }
 
-        [HttpPut("ChangeTabName/{id}")]
-        public async Task<IActionResult> ChangeName(int id, TabDto tab)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutTab(int id, TabDto tab)
         {
             var foundTab = _context.Tabs
                 .FirstOrDefault(t => t.Id == id);

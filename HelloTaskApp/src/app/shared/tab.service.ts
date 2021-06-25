@@ -12,39 +12,35 @@ export class TabService {
 
   newTab: Tab = new Tab();
   tabs: Tab[];
-  readonly baseURL = "https://localhost:5001/api/Tabs";
+  readonly reqUrl = "Tabs";
 
   getTabs() {
-    this.http.get(this.baseURL)
+    this.http.get(this.reqUrl)
       .toPromise()
       .then(response => this.tabs = response as Tab[]);
   }
 
   getTab(id: number) {
-    return this.http.get(`${this.baseURL}/${id}`);
-  }
-
-  getCachedTab(id: number) {
-    return this.tabs.find(tab => tab.id === id);
+    return this.http.get(`${this.reqUrl}/${id}`);
   }
 
   postTab() {
-    return this.http.post(this.baseURL, this.newTab)
+    return this.http.post(this.reqUrl, this.newTab)
   }
 
-  changeTabName(tab: Tab) {
-    return this.http.put(`${this.baseURL}/ChangeTabName/${tab.id}`, tab)
+  putTab(tab: Tab) {
+    return this.http.put(`${this.reqUrl}/${tab.id}`, tab)
   }
 
   deleteTab(id: number) {
-    return this.http.delete(`${this.baseURL}/${id}`)
+    return this.http.delete(`${this.reqUrl}/${id}`)
   }
 
-  deleteTask(taskId: number) {
-    return this.http.delete(`${this.baseURL}/${taskId}`)
+  deleteAssignment(assignmentId: number) {
+    return this.http.delete(`${this.reqUrl}/${assignmentId}`)
   }
 
-  addAssignment(tabId: number, newAssignment: Assignment) {
-    return this.http.post(`https://localhost:5001/api/Assignments/AddAssignment/${tabId}`, newAssignment)
+  postAssignment(tabId: number, newAssignment: Assignment) {
+    return this.http.post(`Assignments/${tabId}`, newAssignment)
   }
 }

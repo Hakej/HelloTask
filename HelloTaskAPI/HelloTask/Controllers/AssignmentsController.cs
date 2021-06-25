@@ -58,7 +58,7 @@ namespace HelloTask.Controllers
             return NoContent();
         }
         
-        [HttpPost("AddAssignment/{tabId}")]
+        [HttpPost("{tabId}")]
         public async Task<ActionResult<Tab>> AddAssignment(int tabId, AssignmentsDto assignments)
         {
             var tab = _context.Tabs

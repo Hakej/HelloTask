@@ -10,17 +10,17 @@ export class AssignmentService {
   constructor(private http: HttpClient) { }
 
   assignmentData: Assignment = new Assignment();
-  readonly baseURL = "https://localhost:5001/api/Assignments"
+  readonly reqUrl = "Assignments"
 
   postAssignment(id: number) {
-    return this.http.post(`${this.baseURL}/AddAssignment/${id}`, this.assignmentData)
+    return this.http.post(`${this.reqUrl}/${id}`, this.assignmentData)
   }
 
   putAssignment() {
-    return this.http.put(`${this.baseURL}/${this.assignmentData.id}`, this.assignmentData)
+    return this.http.put(`${this.reqUrl}/${this.assignmentData.id}`, this.assignmentData)
   }
 
   deleteAssignment(id: number) {
-    return this.http.delete(`${this.baseURL}/${id}`)
+    return this.http.delete(`${this.reqUrl}/${id}`)
   }
 }

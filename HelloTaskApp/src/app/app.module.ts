@@ -5,7 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { AppComponent } from './app.component';
 import { AssignmentComponent } from './assignment/assignment.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TabComponent } from './tab/tab.component';
 import { TabFormComponent } from './tab/tab-form/tab-form.component';
 import { TabDialog } from './tab/tab-dialog/tab-dialog.component';
@@ -20,6 +20,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { BoardComponent } from './board/board.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { environment } from 'src/environments/environment';
+import { BaseUrlInterceptor } from './shared/base-url.interceptor';
 
 @NgModule({
   declarations: [
@@ -46,7 +48,17 @@ import { MatIconModule } from '@angular/material/icon';
     MatDialogModule,
     MatIconModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: "BASE_API_URL",
+      useValue: environment.apiUrl
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: BaseUrlInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -35,7 +35,7 @@ export class TabCacheService {
   }
 
   renameTab(newTabName: string) {
-    this.tabService.changeTabName(this.tab).toPromise()
+    this.tabService.putTab(this.tab).toPromise()
       .then(res => {
         this.tab.name = newTabName;
         this.toastr.info("Tab updated successfully.", "Tab update");
@@ -43,7 +43,7 @@ export class TabCacheService {
   }
 
   addAssignment(newAssignment: Assignment) {
-    this.tabService.addAssignment(this.tab.id, newAssignment)
+    this.tabService.postAssignment(this.tab.id, newAssignment)
       .subscribe(
         res => {
           this.tab.assignments.push(res as Assignment);
@@ -51,5 +51,4 @@ export class TabCacheService {
         err => { console.log(err) }
       )
   }
-
 }
