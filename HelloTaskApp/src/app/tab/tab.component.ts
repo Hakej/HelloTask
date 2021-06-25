@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { Assignment } from '../shared/assignment.model';
 import { TabCacheService } from '../shared/tab-cache.service';
+import { Tab } from '../shared/tab.model';
 import { TabDialog } from './tab-dialog/tab-dialog.component';
 
 export interface DialogData {
@@ -47,7 +48,7 @@ export class TabComponent implements OnInit {
   openDialog() {
     const dialogRef = this.dialog.open(TabDialog, {
       data: {
-        tabName: this.tab.name
+        tabName: this.tab?.name
       }
     });
 
