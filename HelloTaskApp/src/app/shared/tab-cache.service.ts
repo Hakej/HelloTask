@@ -34,7 +34,7 @@ export class TabCacheService {
       )
   }
 
-  renameTab(newTabName: string) {
+  putTab(newTabName: string) {
     this.tabService.putTab(this.tab).toPromise()
       .then(res => {
         this.tab.name = newTabName;

@@ -53,12 +53,11 @@ export class TabComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       this.isTabSelected = false;
-      console.log(result);
       if (result) {
         if (result.shouldBeDeleted) {
           this.tabCache.deleteTab(this.tabId);
         } else {
-          this.tabCache.renameTab(result.tabName);
+          this.tabCache.putTab(result.tabName);
         }
       }
     });

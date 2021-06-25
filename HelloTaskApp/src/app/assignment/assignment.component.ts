@@ -38,7 +38,10 @@ export class AssignmentComponent implements OnInit {
   }
 
   onPut() {
-    this.assignmentService.putAssignment();
+    this.assignmentService.assignmentData = this.assignment;
+
+    this.assignmentService.putAssignment().toPromise()
+      .then(res => { }, err => { console.log(err) });
   }
 
   selectAssignment() {
@@ -49,7 +52,7 @@ export class AssignmentComponent implements OnInit {
   openDialog() {
     const dialogRef = this.dialog.open(AssignmentDialogComponent, {
       data: {
-        assignmentName: this.assignment.name
+        assignment: this.assignment
       }
     });
 
@@ -60,7 +63,7 @@ export class AssignmentComponent implements OnInit {
         if (result.shouldBeDeleted) {
           this.onDelete(this.assignment.id)
         } else {
-
+          this.assignment.name = result.assignment.name;
           this.onPut();
         }
       }

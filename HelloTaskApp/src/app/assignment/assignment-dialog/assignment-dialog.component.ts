@@ -1,9 +1,10 @@
 import { Component, Inject } from "@angular/core";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Assignment } from "src/app/shared/assignment.model";
 import { AssignmentComponent } from "../assignment.component";
 
 export interface AssignmentData {
-  assignmentName: string
+  assignment: Assignment,
   shouldBeDeleted: boolean;
 }
 
@@ -17,7 +18,7 @@ export class AssignmentDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<AssignmentComponent>,
     @Inject(MAT_DIALOG_DATA) public data: AssignmentData) {
-    this.assignmentName = data.assignmentName;
+    this.assignmentName = data.assignment.name;
   }
 
   onNoClick(): void {
