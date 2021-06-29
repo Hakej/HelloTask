@@ -21,25 +21,70 @@ namespace HelloTask.Controllers
         {
             _context = context;
         }
-        
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutAssignment(int id, AssignmentsDto assignments)
-        {
-            var oldAssignment = _context.Assignments.FirstOrDefault(t => t.Id == id);
 
-            if (oldAssignment == null)
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<AssignmentDto>>> GetAssignments()
+        {
+            var assignments = await _context.Assignments.ToListAsync();
+
+            var assignmentDtos = assignments.Select(assignment => new AssignmentDto() { Id = assignment.Id, Name = assignment.Name, Description = assignment.Description, TabId = assignment.TabId }).ToList();
+
+            return assignmentDtos;
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<AssignmentDto>> GetAssignment(int id)
+        {
+            var assignment = _context.Assignments
+                .FirstOrDefault(a => a.Id == id);
+
+            if (assignment == null)
             {
                 return NotFound();
             }
 
-            oldAssignment.Name = assignments.Name;
-            oldAssignment.Description = assignments.Description;
+            var assignmentDto = new AssignmentDto()
+                {Id = assignment.Id, Name = assignment.Name, Description = assignment.Description, TabId = assignment.TabId };
 
-            _context.Entry(oldAssignment).State = EntityState.Modified;
+            return assignmentDto;
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<AssignmentDto>> PutAssignment(int id, AssignmentDto assignment)
+        {
+            if (id != assignment.Id)
+            {
+                return BadRequest("Ids in request and body don't match.");
+            }
+
+            var foundAssignment = _context.Assignments.FirstOrDefault(t => t.Id == id);
+
+            if (foundAssignment == null)
+            {
+                return NotFound();
+            }
+
+            foundAssignment.Name = assignment.Name;
+            foundAssignment.Description = assignment.Description;
+
+            if (foundAssignment.TabId != assignment.TabId)
+            {
+                var newTab = await _context.Tabs.FindAsync(assignment.TabId);
+
+                if (newTab == null)
+                {
+                    return NotFound();
+                }
+
+                foundAssignment.Tab = newTab;
+                foundAssignment.TabId = newTab.Id;
+            }
+
+            _context.Entry(foundAssignment).State = EntityState.Modified;
             
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return assignment;
         }
         
         [HttpDelete("{id}")]
@@ -59,7 +104,7 @@ namespace HelloTask.Controllers
         }
         
         [HttpPost("{tabId}")]
-        public async Task<ActionResult<Tab>> AddAssignment(int tabId, AssignmentsDto assignments)
+        public async Task<ActionResult<TabDto>> PostAssignment(int tabId, AssignmentDto assignment)
         {
             var tab = _context.Tabs
                 .Include(c => c.Assignments)
@@ -70,11 +115,14 @@ namespace HelloTask.Controllers
                 return NotFound();
             }
 
-            var newAssignment = new Models.Assignment() { Name = assignments.Name, Description = assignments.Description };
+            var newAssignment = new Assignment() { Name = assignment.Name, Description = assignment.Description };
+
             tab.Assignments.Add(newAssignment);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("AddAssignment", newAssignment);
+            assignment.Id = newAssignment.Id;
+
+            return CreatedAtAction(nameof(GetAssignment), new {id = newAssignment.Id}, assignment);
         }
     }
 }

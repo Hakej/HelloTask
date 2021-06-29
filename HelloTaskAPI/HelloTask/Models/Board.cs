@@ -3,14 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HelloTask.Models
 {
-    public class Tab
+    public class Board
     {
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
-        public ICollection<Assignment> Assignments { get; set; }
-
-        public int BoardId { get; set; }
-        public Board Board { get; set; }
+        public ICollection<Tab> Tabs { get; set; }
     }
 }
