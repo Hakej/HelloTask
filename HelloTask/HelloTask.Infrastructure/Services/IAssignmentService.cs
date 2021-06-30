@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Threading.Tasks;
 using HelloTask.Infrastructure.DTO;
 
 namespace HelloTask.Infrastructure.Services
 {
     public interface IAssignmentService
     {
-        AssignmentDto GetAssignment(Guid id);
-        void AddAssignment(string name, string description);
+        Task<AssignmentDto> GetAssignmentAsync(Guid id);
+        Task PostAssignmentAsync(string name, string description);
     }
 }

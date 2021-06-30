@@ -17,20 +17,21 @@ namespace HelloTask.Infrastructure.Repositories
             new Assignment("Third assignment", "This is the most challenging one yet")
         };
 
-        public Assignment Get(Guid id)
-            => _assignments.Single(x => x.Id == id);
+        public async Task<Assignment> GetAsync(Guid id)
+            => await Task.FromResult(_assignments.SingleOrDefault(x => x.Id == id));
 
-        public IEnumerable<Assignment> GetAll()
-            => _assignments;
+        public async Task<IEnumerable<Assignment>> GetAllAsync()
+            => await Task.FromResult(_assignments);
 
-        public void Add(Assignment assignment)
+        public async Task AddAsync(Assignment assignment)
         {
             _assignments.Add(assignment);
+            await Task.CompletedTask;
         }
 
-        public void Remove(Guid id)
+        public async Task RemoveAsync(Guid id)
         {
-            var assignment = Get(id);
+            var assignment = await GetAsync(id);
 
             if (assignment == null)
             {
@@ -38,11 +39,15 @@ namespace HelloTask.Infrastructure.Repositories
             }
 
             _assignments.Remove(assignment);
+
+            await Task.CompletedTask;
         }
 
-        public void Update(Assignment assignment)
+        public async Task UpdateAsync(Assignment assignment)
         {
             throw new NotImplementedException();
+
+            await Task.CompletedTask;
         }
     }
 }

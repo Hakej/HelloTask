@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using HelloTask.Core.Models;
 using HelloTask.Core.Repositories;
@@ -19,19 +20,22 @@ namespace HelloTask.Infrastructure.Services
             _mapper = mapper;
         }
 
-        public AssignmentDto GetAssignment(Guid id)
+        public async Task<AssignmentDto> GetAssignmentAsync(Guid id)
         {
-            var assignments = _assignmentRepository.GetAll();
+            var assignments = await _assignmentRepository.GetAllAsync();
             var assignment = assignments.GetRandomElement();
-            //var assignment = _assignmentRepository.Get(id);
+            //var assignment = _assignmentRepository.GetAsync(id);
 
             return _mapper.Map<Assignment, AssignmentDto>(assignment);
         }
 
-        public void AddAssignment(string name, string description)
+        public async Task PostAssignmentAsync(string name, string description)
         {
             var assignment = new Assignment(name, description);
-            _assignmentRepository.Add(assignment);
+            
+            await _assignmentRepository.AddAsync(assignment);
+             
+            await Task.CompletedTask;
         }
     }
 }
