@@ -20,15 +20,37 @@ namespace HelloTask.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<AssignmentDto> Get(Guid id)
-            => await _assignmentService.GetAssignmentAsync(id);
+        public async Task<IActionResult> Get(Guid id)
+        {
+            var assignment = await _assignmentService.GetAssignmentAsync(id);
+
+            if (assignment == null)
+            {
+                return NotFound();
+            }
+
+            return Json(assignment);
+        }
 
         [HttpGet]
-        public async Task<IEnumerable<AssignmentDto>> Get()
-            => await _assignmentService.GetAllAssignmentsAsync();
+        public async Task<IActionResult> Get()
+        {
+            var assignments = await _assignmentService.GetAllAssignmentsAsync();
+
+            if (assignments == null)
+            {
+                return NotFound();
+            }
+
+            return Json(assignments);
+        }
 
         [HttpPost]
-        public async Task Post([FromBody]PostAssignment command) 
-            => await _assignmentService.PostAssignmentAsync(command.Name, command.Description);
+        public async Task<IActionResult> Post([FromBody] PostAssignment command)
+        {
+            await _assignmentService.PostAssignmentAsync(command.Name, command.Description);
+
+            return Created("assignments/", new object());
         }
+    }
 }
