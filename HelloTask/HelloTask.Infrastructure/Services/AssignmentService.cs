@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using AutoMapper;
 using HelloTask.Core.Models;
 using HelloTask.Core.Repositories;
 using HelloTask.Infrastructure.DTO;
@@ -10,10 +11,12 @@ namespace HelloTask.Infrastructure.Services
     public class AssignmentService : IAssignmentService
     {
         private readonly IAssignmentRepository _assignmentRepository;
+        private readonly IMapper _mapper;
 
-        public AssignmentService(IAssignmentRepository assignmentRepository)
+        public AssignmentService(IAssignmentRepository assignmentRepository, IMapper mapper)
         {
             _assignmentRepository = assignmentRepository;
+            _mapper = mapper;
         }
 
         public AssignmentDto GetAssignment(Guid id)
@@ -22,12 +25,7 @@ namespace HelloTask.Infrastructure.Services
             var assignment = assignments.GetRandomElement();
             //var assignment = _assignmentRepository.Get(id);
 
-            return new AssignmentDto()
-            {
-                Id = assignment.Id,
-                Name = assignment.Name,
-                Description = assignment.Description
-            };
+            return _mapper.Map<Assignment, AssignmentDto>(assignment);
         }
 
         public void AddAssignment(string name, string description)

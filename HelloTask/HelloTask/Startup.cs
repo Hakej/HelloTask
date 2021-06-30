@@ -13,7 +13,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using HelloTask.Core.Repositories;
+using HelloTask.Infrastructure.Mappers;
 using HelloTask.Infrastructure.Repositories;
 using HelloTask.Infrastructure.Services;
 
@@ -33,6 +35,8 @@ namespace HelloTask
         {
             services.AddScoped<IAssignmentRepository, InMemoryAssignmentRepository>();
             services.AddScoped<IAssignmentService, AssignmentService>();
+
+            services.AddSingleton(AutoMapperConfig.Initialize());
 
             services.AddCors();
 

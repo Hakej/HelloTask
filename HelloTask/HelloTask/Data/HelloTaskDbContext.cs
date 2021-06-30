@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using HelloTask.Models;
+using HelloTask.Core.Models;
+using Board = HelloTask.Models.Board;
+using Tab = HelloTask.Models.Tab;
 
 namespace HelloTask.Data
 {
