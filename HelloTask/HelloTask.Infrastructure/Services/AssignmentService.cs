@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -22,11 +23,16 @@ namespace HelloTask.Infrastructure.Services
 
         public async Task<AssignmentDto> GetAssignmentAsync(Guid id)
         {
-            var assignments = await _assignmentRepository.GetAllAsync();
-            var assignment = assignments.GetRandomElement();
-            //var assignment = _assignmentRepository.GetAsync(id);
+            var assignment = await _assignmentRepository.GetAsync(id);
 
             return _mapper.Map<Assignment, AssignmentDto>(assignment);
+        }
+
+        public async Task<IEnumerable<AssignmentDto>> GetAllAssignmentsAsync()
+        {
+            var assignments = await _assignmentRepository.GetAllAsync();
+
+            return _mapper.Map<IEnumerable<Assignment>, IEnumerable<AssignmentDto>>(assignments);
         }
 
         public async Task PostAssignmentAsync(string name, string description)
