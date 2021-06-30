@@ -13,6 +13,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HelloTask.Core.Repositories;
+using HelloTask.Infrastructure.Repositories;
+using HelloTask.Infrastructure.Services;
 
 namespace HelloTask
 {
@@ -28,6 +31,9 @@ namespace HelloTask
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IAssignmentRepository, InMemoryAssignmentRepository>();
+            services.AddScoped<IAssignmentService, AssignmentService>();
+
             services.AddCors();
 
             services.AddControllers()
