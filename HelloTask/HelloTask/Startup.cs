@@ -36,7 +36,7 @@ namespace HelloTask
 
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IAssignmentRepository, InMemoryAssignmentRepository>();
             services.AddScoped<IAssignmentService, AssignmentService>();
@@ -57,12 +57,7 @@ namespace HelloTask
             services.AddDbContext<HelloTaskDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("Default")));
 
-            var builder = new ContainerBuilder();
-            builder.Populate(services);
-            builder.RegisterModule<CommandModule>();
-            ApplicationContainer = builder.Build();
-
-            return new AutofacServiceProvider(ApplicationContainer);
+            services.AddOptions();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -92,6 +87,14 @@ namespace HelloTask
             });
 
             appLifetime.ApplicationStopped.Register(() => ApplicationContainer.Dispose());
+        }
+
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            // Register your own things directly with Autofac here. Don't
+            // call builder.Populate(), that happens in AutofacServiceProviderFactory
+            // for you.
+            builder.RegisterModule<CommandModule>();
         }
     }
 }
