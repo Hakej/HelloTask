@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using HelloTask.Infrastructure.Commands;
 using HelloTask.Infrastructure.Commands.Assignments;
-using HelloTask.Infrastructure.DTO;
 using HelloTask.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.TagHelpers.Cache;
 
 namespace HelloTask.Api.Controllers
 {
-    [Route("[controller]")]
-    [ApiController]
-    public class AssignmentsController : Controller
+    public class AssignmentsController : ApiControllerBase
     {
         private readonly IAssignmentService _assignmentService;
-        public AssignmentsController(IAssignmentService assignmentService)
+
+        public AssignmentsController(IAssignmentService assignmentService, 
+            ICommandDispatcher commandDispatcher) : base(commandDispatcher)
         {
             _assignmentService = assignmentService;
         }
@@ -48,9 +46,17 @@ namespace HelloTask.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] PostAssignment command)
         {
-            await _assignmentService.PostAssignmentAsync(command.Name, command.Description);
+            await CommandDispatcher.DispatchAsync(command);
 
             return Created("assignments/", new object());
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Put([FromBody] PutAssignment command)
+        {
+            await CommandDispatcher.DispatchAsync(command);
+
+            return NoContent();
         }
     }
 }

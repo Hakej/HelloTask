@@ -16,18 +16,8 @@ using Xunit;
 
 namespace HelloTask.Tests.EndToEnd.Controllers
 {
-    public class AssignmentsControllerTests
+    public class AssignmentsControllerTests : ControllerTestsBase
     {
-        private readonly TestServer _server;
-        private readonly HttpClient _client;
-
-        public AssignmentsControllerTests()
-        {
-            _server = new TestServer(new WebHostBuilder()
-                .UseStartup<Startup>());
-            _client = _server.CreateClient();
-        }
-
         [Fact]
         public async Task get_assigments_should_have_assignments()
         {
@@ -42,14 +32,14 @@ namespace HelloTask.Tests.EndToEnd.Controllers
             const string newAssignmentName = "Mock task";
             const string newAssignmentDescription = "Mock description";
 
-            var request = new PostAssignment()
+            var command = new PostAssignment()
             {
                 Name = newAssignmentName,
                 Description = newAssignmentDescription
             };
 
-            var payload = GetPayload(request);
-            var response = await _client.PostAsync("assignments", payload);
+            var payload = GetPayload(command);
+            var response = await Client.PostAsync("assignments", payload);
 
             response.StatusCode.Should().BeEquivalentTo(HttpStatusCode.Created);
             response.Headers.Location.ToString().Should().BeEquivalentTo("assignments/");
@@ -58,23 +48,31 @@ namespace HelloTask.Tests.EndToEnd.Controllers
             assignments.Should().Contain(x => x.Name == newAssignmentName && x.Description == newAssignmentDescription);
 
             var foundAssignment = assignments.SingleOrDefault(x => x.Name == newAssignmentName);
-            var assignment = await _client.GetAsync($"assignments/{foundAssignment.Id}");
+            var assignment = await Client.GetAsync($"assignments/{foundAssignment.Id}");
             assignment.Should().NotBeNull();
+        }
+
+        [Fact]
+        public async Task given_new_name_and_description_assignment_should_be_changed()
+        {
+            var command = new PutAssignment()
+            {
+                NewName = "New name",
+                NewDescription = "New description"
+            };
+
+            var payload = GetPayload(command);
+            var response = await Client.PutAsync("assignments", payload);
+
+            response.StatusCode.Should().BeEquivalentTo(HttpStatusCode.NoContent);
         }
 
         private async Task<IEnumerable<AssignmentDto>> GetAllAssignmentsAsync()
         {
-            var response = await _client.GetAsync("assignments/");
+            var response = await Client.GetAsync("assignments/");
             var responseString = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<IEnumerable<AssignmentDto>>(responseString);
-        }
-
-        private static StringContent GetPayload(object data)
-        {
-            var json = JsonConvert.SerializeObject(data);
-
-            return new StringContent(json, Encoding.UTF8, "application/json");
         }
     }
 }

@@ -13,7 +13,7 @@ using Xunit;
 
 namespace HelloTask.Tests.Services
 {
-    public class AssignmentServiceTest
+    public class AssignmentServiceTests
     {
         [Fact]
         public async Task post_assignment_async_should_invoke_add_async_on_repository()

@@ -13,8 +13,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using HelloTask.Core.Repositories;
+using HelloTask.Infrastructure.IoC.Modules;
 using HelloTask.Infrastructure.Mappers;
 using HelloTask.Infrastructure.Repositories;
 using HelloTask.Infrastructure.Services;
@@ -23,15 +26,17 @@ namespace HelloTask
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+        public IContainer ApplicationContainer { get; private set; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IAssignmentRepository, InMemoryAssignmentRepository>();
             services.AddScoped<IAssignmentService, AssignmentService>();
@@ -51,10 +56,17 @@ namespace HelloTask
 
             services.AddDbContext<HelloTaskDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("Default")));
+
+            var builder = new ContainerBuilder();
+            builder.Populate(services);
+            builder.RegisterModule<CommandModule>();
+            ApplicationContainer = builder.Build();
+
+            return new AutofacServiceProvider(ApplicationContainer);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime appLifetime)
         {
             app.UseCors(options =>
                 options.WithOrigins("http://localhost:4200")
@@ -78,6 +90,8 @@ namespace HelloTask
             {
                 endpoints.MapControllers();
             });
+
+            appLifetime.ApplicationStopped.Register(() => ApplicationContainer.Dispose());
         }
     }
 }
