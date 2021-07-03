@@ -1,23 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Security.Cryptography.Xml;
-using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 using HelloTask.Infrastructure.Commands.Assignments;
 using HelloTask.Infrastructure.DTO;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace HelloTask.Tests.EndToEnd.Controllers
 {
     public class AssignmentsControllerTests : ControllerTestsBase
     {
+        public AssignmentsControllerTests(TestFixture fixture, ITestOutputHelper output) : base(fixture, output)
+        {
+        }
+
         [Fact]
         public async Task get_assigments_should_have_assignments()
         {

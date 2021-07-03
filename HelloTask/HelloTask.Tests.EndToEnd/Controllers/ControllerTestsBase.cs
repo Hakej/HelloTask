@@ -1,27 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace HelloTask.Tests.EndToEnd.Controllers
 {
-    public class ControllerTestsBase
-    { 
-        protected readonly TestServer Server;
+    public class ControllerTestsBase : IClassFixture<TestFixture>, IDisposable
+    {
+        protected readonly TestFixture Fixture;
         protected readonly HttpClient Client;
 
-        protected ControllerTestsBase()
+        protected ControllerTestsBase(TestFixture fixture, ITestOutputHelper output)
         {
-            Server = new TestServer(new WebHostBuilder()
-                .UseStartup<Startup>());
-            Client = Server.CreateClient();
+            Fixture = fixture;
+            fixture.Output = output;
+            Client = fixture.CreateClient();
         }
-
 
         protected static StringContent GetPayload(object data)
         {
@@ -29,5 +25,7 @@ namespace HelloTask.Tests.EndToEnd.Controllers
 
             return new StringContent(json, Encoding.UTF8, "application/json");
         }
+
+        public void Dispose() => Fixture.Output = null;
     }
 }
