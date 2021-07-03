@@ -23,6 +23,11 @@ namespace HelloTask.Tests.EndToEnd.Controllers
             var assignments = await GetAllAssignmentsAsync();
 
             assignments.Should().NotBeEmpty();
+
+            foreach (var assignment in assignments)
+            {
+                Fixture.Output.WriteLine($"Name: {assignment.Name}, Description: {assignment.Description}");
+            }
         }
 
         [Fact]
