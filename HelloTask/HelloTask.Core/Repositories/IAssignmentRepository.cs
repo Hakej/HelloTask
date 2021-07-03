@@ -5,7 +5,7 @@ using HelloTask.Core.Models;
 
 namespace HelloTask.Core.Repositories
 {
-    public interface IAssignmentRepository
+    public interface IAssignmentRepository : IRepository
     {
         Task<Assignment> GetAsync(Guid id);
         Task<IEnumerable<Assignment>> GetAllAsync();

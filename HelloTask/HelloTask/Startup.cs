@@ -8,10 +8,12 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Autofac;
 using HelloTask.Core.Repositories;
+using HelloTask.Infrastructure.IoC;
 using HelloTask.Infrastructure.IoC.Modules;
 using HelloTask.Infrastructure.Mappers;
 using HelloTask.Infrastructure.Repositories;
 using HelloTask.Infrastructure.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HelloTask
 {
@@ -24,19 +26,13 @@ namespace HelloTask
             Configuration = configuration;
         }
 
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IAssignmentRepository, InMemoryAssignmentRepository>();
-            services.AddScoped<IAssignmentService, AssignmentService>();
-
-            services.AddSingleton(AutoMapperConfig.Initialize());
-
             services.AddCors();
 
             services.AddControllers()
-                .AddNewtonsoftJson(options =>
+                    .AddNewtonsoftJson(options =>
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             services.AddSwaggerGen(c =>
@@ -79,7 +75,7 @@ namespace HelloTask
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.RegisterModule<CommandModule>();
+            builder.RegisterModule(new ContainerModule(Configuration));
         }
     }
 }

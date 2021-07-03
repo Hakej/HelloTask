@@ -5,7 +5,7 @@ using HelloTask.Infrastructure.DTO;
 
 namespace HelloTask.Infrastructure.Services
 {
-    public interface IAssignmentService
+    public interface IAssignmentService : IService
     {
         Task<AssignmentDto> GetAssignmentAsync(Guid id);
         Task<IEnumerable<AssignmentDto>> GetAllAssignmentsAsync();
