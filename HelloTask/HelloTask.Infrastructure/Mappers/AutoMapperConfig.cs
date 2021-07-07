@@ -10,6 +10,7 @@ namespace HelloTask.Infrastructure.Mappers
             => new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<Assignment, AssignmentDto>();
+                cfg.CreateMap<Tab, TabDto>();
             })
             .CreateMapper();
     }

@@ -7,13 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Autofac;
-using HelloTask.Core.Repositories;
 using HelloTask.Infrastructure.IoC;
-using HelloTask.Infrastructure.IoC.Modules;
-using HelloTask.Infrastructure.Mappers;
-using HelloTask.Infrastructure.Repositories;
-using HelloTask.Infrastructure.Services;
-using Microsoft.AspNetCore.Mvc;
 
 namespace HelloTask
 {

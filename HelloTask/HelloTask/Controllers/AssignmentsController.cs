@@ -35,11 +35,6 @@ namespace HelloTask.Api.Controllers
         {
             var assignments = await _assignmentService.GetAllAssignmentsAsync();
 
-            if (assignments == null)
-            {
-                return NotFound();
-            }
-
             return Json(assignments);
         }
 

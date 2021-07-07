@@ -1,143 +1,76 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using HelloTask.Infrastructure.Commands;
+using HelloTask.Infrastructure.Commands.Tabs;
+using HelloTask.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using HelloTask.Data;
-using HelloTask.Infrastructure.DTO;
-using HelloTask.ModelDtos;
-using HelloTask.Models;
 
-namespace HelloTask.Controllers
+namespace HelloTask.Api.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class TabsController : ControllerBase
+    public class TabsController : ApiControllerBase
     {
-        private readonly HelloTaskDbContext _context;
+        private readonly ITabService _tabService;
 
-        public TabsController(HelloTaskDbContext context)
+        public TabsController(ITabService tabService,
+        ICommandDispatcher commandDispatcher) : base(commandDispatcher)
         {
-            _context = context;
+            _tabService = tabService;
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(Guid id)
+        {
+            var assignment = await _tabService.GetTabAsync(id);
+
+            if (assignment == null)
+            {
+                return NotFound();
+            }
+
+            return Json(assignment);
+        }
+
+        [HttpGet("Assignments/{tabId}")]
+        public async Task<IActionResult> GetAssignments(Guid tabId)
+        {
+            var assignment = await _tabService.GetTabAsync(tabId);
+
+            if (assignment == null)
+            {
+                return NotFound();
+            }
+
+            var foundAssignments = await _tabService.GetAssignmentsFromTabAsync(tabId);
+
+            return Json(foundAssignments);
+        }
+
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TabDto>>> GetTabs()
+        public async Task<IActionResult> Get()
         {
-            var tabs = await _context.Tabs.ToListAsync();
+            var assignments = await _tabService.GetAllTabsAsync();
 
-            var tabDtos = tabs.Select(tab => new TabDto() { Id = tab.Id, Name = tab.Name, BoardId = tab.BoardId }).ToList();
-
-            return tabDtos;
-        }
-
-        [HttpGet("{id}")]   
-        public async Task<ActionResult<TabDto>> GetTab(int id)
-        {
-            var tab = _context.Tabs.FirstOrDefault(t => t.Id == id);
-
-            if (tab == null)
+            if (assignments == null)
             {
                 return NotFound();
             }
 
-            var tabDto = new TabDto() { Id = tab.Id, Name = tab.Name, BoardId = tab.BoardId};
-
-            return tabDto;
+            return Json(assignments);
         }
 
-        [HttpGet("{id}/Assignments")]
-        public async Task<ActionResult<IEnumerable<AssignmentDto>>> GetAssignmentsFromTab(int id)
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] PostTab command)
         {
-            var tab = _context.Tabs
-                .Include(t => t.Assignments)
-                .FirstOrDefault(t => t.Id == id);
+            await CommandDispatcher.DispatchAsync(command);
 
-            if (tab == null)
-            {
-                return NotFound();
-            }
-
-            var assignmentDtos = tab.Assignments.Select(a => new AssignmentDto() { Id = a.Id, Name = a.Name , Description = a.Description }).ToList();
-
-            return assignmentDtos;
+            return Created("tabs", new object());
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult<TabDto>> PutTab(int id, TabDto tab)
+        [HttpPut]
+        public async Task<IActionResult> Put([FromBody] PutTab command)
         {
-            if (id != tab.Id)
-            {
-                return BadRequest("Ids in request and body don't match.");
-            }
-
-            var foundTab = _context.Tabs
-                .FirstOrDefault(t => t.Id == id);
-
-            if (foundTab == null)
-            {
-                return NotFound();
-            }
-
-            foundTab.Name = tab.Name;
-
-            if (foundTab.BoardId != tab.BoardId)
-            {
-                var newBoard = await _context.Boards.FindAsync(tab.BoardId);
-
-                if (newBoard == null)
-                {
-                    return NotFound();
-                }
-
-                foundTab.Board = newBoard;
-                foundTab.BoardId = newBoard.Id;
-            }
-
-            _context.Entry(foundTab).State = EntityState.Modified;
-
-            await _context.SaveChangesAsync();
-
-            return tab;
-        }
-
-        [HttpPost("{boardId}")]
-        public async Task<ActionResult<TabDto>> PostTab(int boardId, TabDto tabDto)
-        {
-            var board = _context.Boards
-                .Include(c => c.Tabs)
-                .FirstOrDefault(b => b.Id == boardId);
-
-            if (board == null)
-            {
-                return NotFound();
-            }
-            
-            var newTab = new Tab() { Name = tabDto.Name };
-
-            board.Tabs.Add(newTab);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetTab), new { id = newTab.Id }, tabDto);
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTab(int id)
-        {
-            var tab = _context.Tabs
-                .Include(c => c.Assignments)
-                .FirstOrDefault(t => t.Id == id);
-
-            if (tab == null)
-            {
-                return NotFound();
-            }
-            
-            _context.Tabs.Remove(tab);
-            await _context.SaveChangesAsync();
+            await CommandDispatcher.DispatchAsync(command);
 
             return NoContent();
         }

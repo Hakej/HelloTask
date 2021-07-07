@@ -11,12 +11,11 @@ namespace HelloTask.Core.Models
 
         protected Board()
         {
-
         }
 
-        public Board(string name)
+        public Board(Guid id, string name)
         {
-            Id = Guid.NewGuid();
+            Id = id;
             Name = name;
         }
     }

@@ -8,15 +8,18 @@ namespace HelloTask.Core.Models
         public string Name { get; protected set; }
         public string Description { get; protected set; }
 
+        public Guid TabId { get; protected set; }
+
         protected Assignment()
         {
         }
-
-        public Assignment(string name, string description)
+        
+        public Assignment(Guid id, string name, string description, Guid tabId)
         {
-            Id = Guid.NewGuid();
+            Id = id;
             Name = name;
             Description = description;
+            TabId = tabId;
         }
     }
 }

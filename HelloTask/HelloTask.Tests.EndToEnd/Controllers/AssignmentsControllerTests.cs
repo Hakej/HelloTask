@@ -18,42 +18,18 @@ namespace HelloTask.Tests.EndToEnd.Controllers
         }
 
         [Fact]
-        public async Task get_assigments_should_have_assignments()
+        public async Task assignment_with_missing_tabid_should_return_internal_server_error()
         {
-            var assignments = await GetAllAssignmentsAsync();
-
-            assignments.Should().NotBeEmpty();
-
-            foreach (var assignment in assignments)
-            {
-                Fixture.Output.WriteLine($"Name: {assignment.Name}, Description: {assignment.Description}");
-            }
-        }
-
-        [Fact]
-        public async Task assignment_should_be_created()
-        {
-            const string newAssignmentName = "Mock task";
-            const string newAssignmentDescription = "Mock description";
-
             var command = new PostAssignment()
             {
-                Name = newAssignmentName,
-                Description = newAssignmentDescription
+                Name = "Mock task",
+                Description = "Mock description"
             };
 
             var payload = GetPayload(command);
             var response = await Client.PostAsync("assignments", payload);
 
-            response.StatusCode.Should().BeEquivalentTo(HttpStatusCode.Created);
-            response.Headers.Location.ToString().Should().BeEquivalentTo("assignments/");
-
-            var assignments = await GetAllAssignmentsAsync();
-            assignments.Should().Contain(x => x.Name == newAssignmentName && x.Description == newAssignmentDescription);
-
-            var foundAssignment = assignments.SingleOrDefault(x => x.Name == newAssignmentName);
-            var assignment = await Client.GetAsync($"assignments/{foundAssignment.Id}");
-            assignment.Should().NotBeNull();
+            response.StatusCode.Should().BeEquivalentTo(HttpStatusCode.InternalServerError);
         }
 
         [Fact]
