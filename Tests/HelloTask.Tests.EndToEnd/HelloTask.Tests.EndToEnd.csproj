@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HelloTask\HelloTask.Api.csproj" />
+    <ProjectReference Include="..\..\Src\HelloTask.Api\HelloTask.Api.csproj" />
   </ItemGroup>
 
 </Project>

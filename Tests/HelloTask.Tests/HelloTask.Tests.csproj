@@ -17,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HelloTask.Core\HelloTask.Core.csproj" />
-    <ProjectReference Include="..\HelloTask.Infrastructure\HelloTask.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Src\HelloTask.Core\HelloTask.Core.csproj" />
+    <ProjectReference Include="..\..\Src\HelloTask.Infrastructure\HelloTask.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
