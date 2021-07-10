@@ -19,13 +19,14 @@ namespace HelloTask.Tests.Services
         {
             var userRepositoryMock = new Mock<IUserRepository>();
             var mapperMock = new Mock<IMapper>();
+            var encrypterMock = new Mock<IEncrypter>();
 
             const string mockEmail = "user@test.com";
 
             userRepositoryMock.Setup(s => s.GetByEmailAsync(mockEmail))
                 .Returns(Task.FromResult(new User(Guid.NewGuid(), mockEmail, "test", "test", "test", "test")));
             
-            var userService = new UserService(mapperMock.Object, userRepositoryMock.Object);
+            var userService = new UserService(mapperMock.Object, userRepositoryMock.Object, encrypterMock.Object);
 
             await Assert.ThrowsAsync<Exception>(() =>
                 userService.RegisterUserAsync(Guid.NewGuid(), mockEmail, "test", "test", "test"));
@@ -36,8 +37,9 @@ namespace HelloTask.Tests.Services
         {
             var userRepositoryMock = new Mock<IUserRepository>();
             var mapperMock = new Mock<IMapper>();
+            var encrypterMock = new Mock<IEncrypter>();
 
-            var userService = new UserService(mapperMock.Object, userRepositoryMock.Object);
+            var userService = new UserService(mapperMock.Object, userRepositoryMock.Object, encrypterMock.Object);
 
             await userService.RegisterUserAsync(Guid.NewGuid(), "", "", "", "");
             

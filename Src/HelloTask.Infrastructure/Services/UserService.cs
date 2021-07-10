@@ -12,11 +12,13 @@ namespace HelloTask.Infrastructure.Services
     {
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
+        private readonly IEncrypter _encrypter;
 
-        public UserService(IMapper mapper, IUserRepository userRepository)
+        public UserService(IMapper mapper, IUserRepository userRepository, IEncrypter encrypter)
         {
             _mapper = mapper;
             _userRepository = userRepository;
+            _encrypter = encrypter;
         }
 
         public async Task<UserDto> GetUserAsync(Guid id)
@@ -49,8 +51,31 @@ namespace HelloTask.Infrastructure.Services
                 throw new Exception($"User with email '{email}' already exists.");
             }
 
-            user = new User(id, email, username, role, password, Guid.NewGuid().ToString());
+            var salt = _encrypter.GetSalt(password);
+            var hash = _encrypter.GetHash(password, salt);
+
+            user = new User(id, email, username, role, hash, salt);
             await _userRepository.AddAsync(user);
+        }
+
+        public async Task LoginAsync(string email, string password)
+        {
+            var user = await _userRepository.GetByEmailAsync(email);
+
+            if (user == null)
+            {
+                throw new Exception("Invalid credentials.");
+            }
+
+            var salt = _encrypter.GetSalt(password);
+            var hash = _encrypter.GetHash(password, salt);
+
+            if (user.Password == hash)
+            {
+                return;
+            }
+
+            throw new Exception("Invalid credentials.");
         }
     }
 }
