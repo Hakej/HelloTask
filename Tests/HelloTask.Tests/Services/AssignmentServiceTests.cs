@@ -30,7 +30,7 @@ namespace HelloTask.Tests.Services
         }
 
         [Fact]
-        public async Task Pos_AssignmentAsync_WithInvalidTabId_ThrowsException()
+        public async Task PostAssignmentAsync_WithInvalidTabId_ThrowsException()
         {
             var assignmentRepository = new Mock<IAssignmentRepository>();
             var tabRepository = new Mock<ITabRepository>();
