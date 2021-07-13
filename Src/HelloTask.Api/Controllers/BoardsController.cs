@@ -7,20 +7,20 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HelloTask.Api.Controllers
 {
-    public class TabsController : ApiControllerBase
+    public class BoardsController : ApiControllerBase
     {
-        private readonly ITabService _tabService;
+        private readonly IBoardService _boardService;
 
-        public TabsController(ITabService tabService,
-        ICommandDispatcher commandDispatcher) : base(commandDispatcher)
+        public BoardsController(IBoardService boardService,
+            ICommandDispatcher commandDispatcher) : base(commandDispatcher)
         {
-            _tabService = tabService;
+            _boardService = boardService;
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var assignment = await _tabService.GetTabAsync(id);
+            var assignment = await _boardService.GetBoardAsync(id);
 
             if (assignment == null)
             {
@@ -30,27 +30,26 @@ namespace HelloTask.Api.Controllers
             return Json(assignment);
         }
 
-        [HttpGet("Assignments/{tabId}")]
-        public async Task<IActionResult> GetAssignments(Guid tabId)
+        [HttpGet("Tabs/{boardId}")]
+        public async Task<IActionResult> GetTabs(Guid boardId)
         {
-            var tab = await _tabService.GetTabAsync(tabId);
+            var board = await _boardService.GetBoardAsync(boardId);
 
-            if (tab == null)
+            if (board == null)
             {
                 return NotFound();
             }
 
-            var foundAssignments = await _tabService.GetAssignmentsFromTabAsync(tabId);
+            var foundTabs = await _boardService.GetTabsFromBoardAsync(boardId);
 
-            return Json(foundAssignments);
+            return Json(foundTabs);
         }
-
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var tabs = await _tabService.GetAllTabsAsync();
-            return Json(tabs);
+            var boards = await _boardService.GetAllBoardsAsync();
+            return Json(boards);
         }
 
         [HttpPost]
@@ -58,7 +57,7 @@ namespace HelloTask.Api.Controllers
         {
             await CommandDispatcher.DispatchAsync(command);
 
-            return Created("tabs", new object());
+            return Created("boards", new object());
         }
 
         [HttpPut]

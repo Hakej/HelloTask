@@ -20,12 +20,8 @@ namespace HelloTask.Tests.Services
 
             var mapper = AutoMapperConfig.Initialize();
 
-
-            var ourTabId = Guid.NewGuid();
-            await tabRepository.Object.AddAsync(new Tab(ourTabId, "Our tab"));
-
-            var otherTabId = Guid.NewGuid();
-            await tabRepository.Object.AddAsync(new Tab(otherTabId, "Other tab"));
+            var ourTabId = DataInitializer.TabIds[0];
+            var otherTabId = DataInitializer.TabIds[1];
             
             var ourAssignment = new Assignment(Guid.NewGuid(), "Our assignment", "Our description", ourTabId);
             var otherAssignment = new Assignment(Guid.NewGuid(), "Other assignment", "Other description", otherTabId);

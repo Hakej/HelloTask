@@ -2,11 +2,9 @@
 
 namespace HelloTask.Infrastructure.DTO
 {
-    public class TabDto
+    public class BoardDto
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-
-        public Guid BoardId { get; set; }
     }
 }

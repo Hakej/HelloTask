@@ -17,7 +17,7 @@ namespace HelloTask.Infrastructure.Handlers.Tabs
 
         public async Task HandleAsync(PostTab command)
         {
-            await _tabService.PostTabAsync(Guid.NewGuid(), command.Name);
+            await _tabService.PostTabAsync(Guid.NewGuid(), command.Name, command.BoardId);
         }
     }
 }

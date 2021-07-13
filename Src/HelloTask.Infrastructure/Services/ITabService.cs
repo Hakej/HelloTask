@@ -9,7 +9,7 @@ namespace HelloTask.Infrastructure.Services
     {
         Task<TabDto> GetTabAsync(Guid id);
         Task<IEnumerable<TabDto>> GetAllTabsAsync();
-        Task PostTabAsync(Guid id, string name);
+        Task PostTabAsync(Guid id, string name, Guid boardId);
         Task<IEnumerable<AssignmentDto>> GetAssignmentsFromTabAsync(Guid tabId);
     }
 }

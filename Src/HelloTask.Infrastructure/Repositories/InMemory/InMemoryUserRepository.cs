@@ -9,20 +9,20 @@ namespace HelloTask.Infrastructure.Repositories.InMemory
 {
     public class InMemoryUserRepository : IUserRepository
     {
-        private static ISet<User> _users = new HashSet<User>();
+        private static readonly ISet<User> Users = new HashSet<User>();
 
         public async Task<User> GetAsync(Guid id)
-            => await Task.FromResult(_users.SingleOrDefault(x => x.Id == id));
+            => await Task.FromResult(Users.SingleOrDefault(x => x.Id == id));
 
         public async Task<User> GetByEmailAsync(string email)
-            => await Task.FromResult(_users.SingleOrDefault(x => x.Email == email));
+            => await Task.FromResult(Users.SingleOrDefault(x => x.Email == email));
 
         public async Task<IEnumerable<User>> GetAllAsync()
-            => await Task.FromResult(_users);
+            => await Task.FromResult(Users);
 
         public async Task AddAsync(User user)
         {
-            _users.Add(user);
+            Users.Add(user);
             await Task.CompletedTask;
         }
 
@@ -35,7 +35,7 @@ namespace HelloTask.Infrastructure.Repositories.InMemory
                 throw new Exception("User to delete not found.");
             }
 
-            _users.Remove(user);
+            Users.Remove(user);
 
             await Task.CompletedTask;
         }

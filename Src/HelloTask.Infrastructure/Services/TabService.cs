@@ -44,9 +44,9 @@ namespace HelloTask.Infrastructure.Services
             return _mapper.Map<IEnumerable<Assignment>, IEnumerable<AssignmentDto>>(foundAssignments);
         }
 
-        public async Task PostTabAsync(Guid id, string name)
+        public async Task PostTabAsync(Guid id, string name, Guid boardId)
         {
-            var tab = new Tab(id, name);
+            var tab = new Tab(id, name, boardId);
 
             await _tabRepository.AddAsync(tab);
              
