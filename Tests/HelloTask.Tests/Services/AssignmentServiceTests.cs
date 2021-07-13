@@ -12,7 +12,7 @@ namespace HelloTask.Tests.Services
     public class AssignmentServiceTests
     {
         [Fact]
-        public async Task post_assignment_async_with_valid_tabid_should_invoke_add_async_on_repository()
+        public async Task post_assignment_async_with_valid_tabid_should_invoke_add_async_on_repository_once()
         {
             var assignmentRepository = new Mock<IAssignmentRepository>();
             var tabRepository = new Mock<ITabRepository>();

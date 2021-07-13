@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Src\HelloTask.Api\HelloTask.Api.csproj" />
+    <ProjectReference Include="..\..\Src\HelloTask.Infrastructure\HelloTask.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
