@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -18,7 +17,7 @@ namespace HelloTask.Tests.EndToEnd.Controllers
         }
 
         [Fact]
-        public async Task assignment_with_missing_tabid_should_return_internal_server_error()
+        public async Task Assignment_WithMissingTabId_ReturnsInternalServerError()
         {
             var command = new PostAssignment()
             {
@@ -33,7 +32,7 @@ namespace HelloTask.Tests.EndToEnd.Controllers
         }
 
         [Fact]
-        public async Task given_new_name_and_description_assignment_should_be_changed()
+        public async Task Update_WithCorrectAssignment_ReturnsNoContent()
         {
             var command = new PutAssignment()
             {

@@ -15,7 +15,7 @@ namespace HelloTask.Tests.Services
     public class UserServiceTests
     {
         [Fact]
-        public async Task register_user_with_already_registered_email_should_throw_exception()
+        public async Task RegisterUser_WithAlreadyRegisteredEmail_ThrowsException()
         {
             var userRepositoryMock = new Mock<IUserRepository>();
             var mapperMock = new Mock<IMapper>();
@@ -33,7 +33,7 @@ namespace HelloTask.Tests.Services
         }
 
         [Fact]
-        public async Task register_user_async_should_invoke_add_async_on_repository_once()
+        public async Task RegisterUserAsync_InvokesAddAsyncOnRepositoryOnce()
         {
             var userRepositoryMock = new Mock<IUserRepository>();
             var mapperMock = new Mock<IMapper>();

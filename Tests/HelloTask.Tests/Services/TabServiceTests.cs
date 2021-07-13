@@ -13,7 +13,7 @@ namespace HelloTask.Tests.Services
     public class TabServiceTests
     {
         [Fact]
-        public async Task get_assignments_from_tab_async_should_return_the_assignments_only_from_this_tab()
+        public async Task Get_AssignmentsFromTabAsync_ReturnsAssignmentsOnlyFromThisTab()
         {
             var assignmentRepository = new Mock<IAssignmentRepository>();
             var tabRepository = new Mock<ITabRepository>();
