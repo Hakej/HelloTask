@@ -11,6 +11,6 @@ namespace HelloTask.Core.Repositories
         Task<IEnumerable<Tab>> GetAllAsync();
         Task AddAsync(Tab tab);
         Task RemoveAsync(Guid id);
-        Task UpdateAsync(Tab assignment);
+        Task UpdateAsync(Tab tab);
     }
 }

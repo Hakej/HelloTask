@@ -9,17 +9,17 @@ namespace HelloTask.Infrastructure.Repositories.InMemory
 {
     public class InMemoryTabRepository : ITabRepository
     {
-        private static ISet<Tab> _tabs = new HashSet<Tab>();
+        private static readonly ISet<Tab> Tabs = new HashSet<Tab>();
 
         public async Task<Tab> GetAsync(Guid id)
-            => await Task.FromResult(_tabs.SingleOrDefault(x => x.Id == id));
+            => await Task.FromResult(Tabs.SingleOrDefault(x => x.Id == id));
 
         public async Task<IEnumerable<Tab>> GetAllAsync()
-            => await Task.FromResult(_tabs);
+            => await Task.FromResult(Tabs);
 
         public async Task AddAsync(Tab tab)
         {
-            _tabs.Add(tab);
+            Tabs.Add(tab);
             await Task.CompletedTask;
         }
 
@@ -32,7 +32,7 @@ namespace HelloTask.Infrastructure.Repositories.InMemory
                 throw new Exception("Tab to delete not found.");
             }
 
-            _tabs.Remove(tab);
+            Tabs.Remove(tab);
 
             await Task.CompletedTask;
         }

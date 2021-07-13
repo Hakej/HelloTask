@@ -21,7 +21,7 @@ namespace HelloTask.Tests.Services
             var tabId = Guid.NewGuid();
 
             tabRepository.Setup(s => s.GetAsync(tabId))
-                .Returns(Task.FromResult(new Tab(tabId, "Mock tab")));
+                .Returns(Task.FromResult(new Tab(tabId, "Mock tab", Guid.NewGuid())));
 
             var assignmentService = new AssignmentService(mapperMock.Object, assignmentRepository.Object, tabRepository.Object);
             await assignmentService.PostAssignmentAsync(Guid.NewGuid(), "Mock task", "Mock description", tabId);

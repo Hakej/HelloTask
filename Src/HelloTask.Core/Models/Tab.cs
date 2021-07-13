@@ -9,15 +9,18 @@ namespace HelloTask.Core.Models
         public string Name { get; protected set; }
         public ICollection<Assignment> Assignments { get; protected set; }
 
+        public Guid BoardId { get; protected set; }
+
         protected Tab()
         {
                 
         }
 
-        public Tab(Guid id, string name)
+        public Tab(Guid id, string name, Guid boardId)
         {
             Id = id;
             Name = name;
+            BoardId = boardId;
         }
     }
 }

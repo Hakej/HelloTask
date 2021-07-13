@@ -9,17 +9,17 @@ namespace HelloTask.Infrastructure.Repositories.InMemory
 {
     public class InMemoryAssignmentRepository : IAssignmentRepository
     {
-        private static ISet<Assignment> _assignments = new HashSet<Assignment>();
+        private static readonly ISet<Assignment> Assignments = new HashSet<Assignment>();
 
         public async Task<Assignment> GetAsync(Guid id)
-            => await Task.FromResult(_assignments.SingleOrDefault(x => x.Id == id));
+            => await Task.FromResult(Assignments.SingleOrDefault(x => x.Id == id));
 
         public async Task<IEnumerable<Assignment>> GetAllAsync()
-            => await Task.FromResult(_assignments);
+            => await Task.FromResult(Assignments);
 
         public async Task AddAsync(Assignment assignment)
         {
-            _assignments.Add(assignment);
+            Assignments.Add(assignment);
             await Task.CompletedTask;
         }
 
@@ -32,7 +32,7 @@ namespace HelloTask.Infrastructure.Repositories.InMemory
                 throw new Exception("Assignment to delete not found.");
             }
 
-            _assignments.Remove(assignment);
+            Assignments.Remove(assignment);
 
             await Task.CompletedTask;
         }

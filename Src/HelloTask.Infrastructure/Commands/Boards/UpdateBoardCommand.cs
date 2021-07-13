@@ -1,12 +1,10 @@
 ﻿using System;
 
-namespace HelloTask.Infrastructure.DTO
+namespace HelloTask.Infrastructure.Commands.Boards
 {
-    public class TabDto
+    public class UpdateBoardCommand : ICommand
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-
-        public Guid BoardId { get; set; }
     }
 }
