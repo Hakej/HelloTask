@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using HelloTask.Data;
 using Microsoft.AspNetCore.Builder;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Autofac;
 using HelloTask.Infrastructure.IoC;
+using HelloTask.Infrastructure.Services;
 using HelloTask.Infrastructure.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -29,10 +31,12 @@ namespace HelloTask
         {
             services.AddCors();
 
+            services.AddMemoryCache();
+
             services.AddControllers()
                     .AddNewtonsoftJson(options =>
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
-
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "HelloTask", Version = "v1" });
@@ -78,8 +82,6 @@ namespace HelloTask
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
-            app.ApplicationServices.GetService<JwtSettings>();
             
             app.UseAuthentication();
             app.UseAuthorization();
@@ -88,8 +90,15 @@ namespace HelloTask
             {
                 endpoints.MapControllers();
             });
-        }
 
+            var generalSettings = app.ApplicationServices.GetService<GeneralSettings>();
+
+            if (generalSettings.SeedData)
+            {
+                var dataInitializer = app.ApplicationServices.GetService<IDataInitializer>();
+                dataInitializer.SeedAsync();
+            }
+        }
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterModule(new ContainerModule(Configuration));

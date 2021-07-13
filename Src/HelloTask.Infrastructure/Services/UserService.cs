@@ -66,9 +66,8 @@ namespace HelloTask.Infrastructure.Services
             {
                 throw new Exception("Invalid credentials.");
             }
-
-            var salt = _encrypter.GetSalt(password);
-            var hash = _encrypter.GetHash(password, salt);
+            
+            var hash = _encrypter.GetHash(password, user.Salt);
 
             if (user.Password == hash)
             {
