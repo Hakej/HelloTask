@@ -12,7 +12,7 @@ namespace HelloTask.Tests.Services
     public class AssignmentServiceTests
     {
         [Fact]
-        public async Task post_assignment_async_with_valid_tabid_should_invoke_add_async_on_repository_once()
+        public async Task Post_AssignmentAsyncWithValidTabId_InvokesAddAsyncOnRepositoryOnce()
         {
             var assignmentRepository = new Mock<IAssignmentRepository>();
             var tabRepository = new Mock<ITabRepository>();
@@ -30,7 +30,7 @@ namespace HelloTask.Tests.Services
         }
 
         [Fact]
-        public async Task post_assignment_async_with_invalid_tabid_should_throw_exception()
+        public async Task Post_AssignmentAsyncWithInvalidTabId_ThrowsException()
         {
             var assignmentRepository = new Mock<IAssignmentRepository>();
             var tabRepository = new Mock<ITabRepository>();
