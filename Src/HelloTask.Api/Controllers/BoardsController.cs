@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using HelloTask.Infrastructure.Commands;
 using HelloTask.Infrastructure.Commands.Tabs;
 using HelloTask.Infrastructure.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HelloTask.Api.Controllers
@@ -52,20 +53,13 @@ namespace HelloTask.Api.Controllers
             return Json(boards);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] PostTab command)
         {
-            await CommandDispatcher.DispatchAsync(command);
+            await DispatchAsync(command);
 
             return Created("boards", new object());
-        }
-
-        [HttpPut]
-        public async Task<IActionResult> Put([FromBody] PutTab command)
-        {
-            await CommandDispatcher.DispatchAsync(command);
-
-            return NoContent();
         }
     }
 }

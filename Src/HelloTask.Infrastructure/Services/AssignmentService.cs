@@ -12,13 +12,15 @@ namespace HelloTask.Infrastructure.Services
     {
         private readonly IAssignmentRepository _assignmentRepository;
         private readonly ITabRepository _tabRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
-        public AssignmentService(IMapper mapper, IAssignmentRepository assignmentRepository, ITabRepository tabRepository)
+        public AssignmentService(IMapper mapper, IAssignmentRepository assignmentRepository, ITabRepository tabRepository, IUserRepository userRepository)
         {
             _mapper = mapper;
             _assignmentRepository = assignmentRepository;
             _tabRepository = tabRepository;
+            _userRepository = userRepository;
         }
 
         public async Task<AssignmentDto> GetAssignmentAsync(Guid id)
@@ -35,18 +37,22 @@ namespace HelloTask.Infrastructure.Services
             return _mapper.Map<IEnumerable<Assignment>, IEnumerable<AssignmentDto>>(assignments);
         }
 
-        public async Task PostAssignmentAsync(Guid id, string name, string description, Guid tabId)
+        public async Task PostAssignmentAsync(Guid id, Guid ownerId, string name, string description, Guid tabId)
         {
-            var assignment = new Assignment(id, name, description, tabId);
-            var tab = await _tabRepository.GetAsync(tabId);
-
-            if (tab == null)
+            var owner = await _userRepository.GetAsync(ownerId);
+            if (owner == null)
             {
-                throw new Exception($"Can't add assignment - tab with id: {tabId} doesn't exist.");
+                throw new ArgumentException($"Invalid owner id: user with id: {ownerId} doesn't exist.", nameof(ownerId));
             }
 
+            var tab = await _tabRepository.GetAsync(tabId);
+            if (tab == null)
+            {
+                throw new ArgumentException($"Can't add assignment - tab with id: {tabId} doesn't exist.", nameof(tabId));
+            }
+
+            var assignment = new Assignment(id, owner, name, description, tabId);
             await _assignmentRepository.AddAsync(assignment);
-             
             await Task.CompletedTask;
         }
     }

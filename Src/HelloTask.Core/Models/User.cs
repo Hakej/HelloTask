@@ -4,20 +4,14 @@ namespace HelloTask.Core.Models
 {
     public class User
     {
-        public Guid Id { get; protected set; }
-        public string Email { get; protected set; }
-        public string Password { get; protected set; }
+        public Guid Id { get; }
+        public string Email { get; }
+        public string Password { get; }
         public string Salt { get; protected set; }
-        public string Username { get; protected set; }
-        public string Role { get; protected set; }
-        public DateTime CreatedAt { get; protected set; }
-        public DateTime UpdatedAt { get; protected set; }
-
-        protected User()
-        {
-                
-        }
-
+        public string Username { get; }
+        public string Role { get; }
+        public DateTime CreatedAt { get; }
+        public DateTime UpdatedAt { get; }
         public User(Guid userId, string email, string username, string role,
             string password, string salt)
         {

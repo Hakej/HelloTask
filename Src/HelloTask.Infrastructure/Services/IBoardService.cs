@@ -7,9 +7,9 @@ namespace HelloTask.Infrastructure.Services
 {
     public interface IBoardService : IService
     {
-        Task<BoardDto> GetBoardAsync(Guid id);
+        Task<BoardDetailsDto> GetBoardAsync(Guid id);
         Task<IEnumerable<BoardDto>> GetAllBoardsAsync();
-        Task PostBoardAsync(Guid id, string name);
+        Task PostBoardAsync(Guid id, Guid ownerId, string name);
         Task<IEnumerable<TabDto>> GetTabsFromBoardAsync(Guid tabId);
     }
 }

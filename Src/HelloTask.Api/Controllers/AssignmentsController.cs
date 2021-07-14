@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using HelloTask.Infrastructure.Commands;
 using HelloTask.Infrastructure.Commands.Assignments;
 using HelloTask.Infrastructure.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HelloTask.Api.Controllers
@@ -38,20 +39,13 @@ namespace HelloTask.Api.Controllers
             return Json(assignments);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] PostAssignment command)
         {
-            await CommandDispatcher.DispatchAsync(command);
+            await DispatchAsync(command);
 
             return Created("assignments/", new object());
-        }
-
-        [HttpPut]
-        public async Task<IActionResult> Put([FromBody] PutAssignment command)
-        {
-            await CommandDispatcher.DispatchAsync(command);
-
-            return NoContent();
         }
     }
 }

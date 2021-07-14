@@ -5,16 +5,12 @@ namespace HelloTask.Core.Models
 {
     public class Tab
     {
-        public Guid Id { get; protected set; }
-        public string Name { get; protected set; }
-        public ICollection<Assignment> Assignments { get; protected set; }
+        public Guid Id { get; }
+        public User Owner { get; }
+        public string Name { get; }
+        public ICollection<Assignment> Assignments { get; }
 
-        public Guid BoardId { get; protected set; }
-
-        protected Tab()
-        {
-                
-        }
+        public Guid BoardId { get; }
 
         public Tab(Guid id, string name, Guid boardId)
         {

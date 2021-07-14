@@ -17,14 +17,18 @@ namespace HelloTask.Tests.Services
         {
             var assignmentRepository = new Mock<IAssignmentRepository>();
             var tabRepository = new Mock<ITabRepository>();
+            var userRepositoryMock = new Mock<IUserRepository>();
+            var boardRepositoryMock = new Mock<IBoardRepository>();
 
             var mapper = AutoMapperConfig.Initialize();
 
             var ourTabId = DataInitializer.TabIds[0];
             var otherTabId = DataInitializer.TabIds[1];
+
+            var owner = new User(DataInitializer.UserIds[0], "", "", "", "", "");
             
-            var ourAssignment = new Assignment(Guid.NewGuid(), "Our assignment", "Our description", ourTabId);
-            var otherAssignment = new Assignment(Guid.NewGuid(), "Other assignment", "Other description", otherTabId);
+            var ourAssignment = new Assignment(Guid.NewGuid(), owner, "Our assignment", "Our description", ourTabId);
+            var otherAssignment = new Assignment(Guid.NewGuid(), owner, "Other assignment", "Other description", otherTabId);
 
             assignmentRepository.Setup(s => s.GetAllAsync())
                                 .Returns(
@@ -34,7 +38,7 @@ namespace HelloTask.Tests.Services
                                         otherAssignment
                                     } as IEnumerable<Assignment>));
             
-            var tabService = new TabService(mapper, tabRepository.Object, assignmentRepository.Object);
+            var tabService = new TabService(mapper, tabRepository.Object, assignmentRepository.Object, userRepositoryMock.Object, boardRepositoryMock.Object);
             var result = await tabService.GetAssignmentsFromTabAsync(ourTabId);
                 
             Assert.Contains(result, item => item.Id == ourAssignment.Id);

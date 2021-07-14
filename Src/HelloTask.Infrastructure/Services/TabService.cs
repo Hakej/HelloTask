@@ -14,19 +14,23 @@ namespace HelloTask.Infrastructure.Services
         private readonly ITabRepository _tabRepository;
         private readonly IAssignmentRepository _assignmentRepository;
         private readonly IMapper _mapper;
+        private readonly IUserRepository _userRepository;
+        private readonly IBoardRepository _boardRepository;
 
-        public TabService(IMapper mapper, ITabRepository tabRepository, IAssignmentRepository assignmentRepository)
+        public TabService(IMapper mapper, ITabRepository tabRepository, IAssignmentRepository assignmentRepository, IUserRepository userRepository, IBoardRepository boardRepository)
         {
             _mapper = mapper;
             _tabRepository = tabRepository;
             _assignmentRepository = assignmentRepository;
+            _userRepository = userRepository;
+            _boardRepository = boardRepository;
         }
 
-        public async Task<TabDto> GetTabAsync(Guid id)
+        public async Task<TabDetailsDto> GetTabAsync(Guid id)
         {
             var tab = await _tabRepository.GetAsync(id);
 
-            return _mapper.Map<Tab, TabDto>(tab);
+            return _mapper.Map<Tab, TabDetailsDto>(tab);
         }
 
         public async Task<IEnumerable<TabDto>> GetAllTabsAsync()
@@ -44,12 +48,22 @@ namespace HelloTask.Infrastructure.Services
             return _mapper.Map<IEnumerable<Assignment>, IEnumerable<AssignmentDto>>(foundAssignments);
         }
 
-        public async Task PostTabAsync(Guid id, string name, Guid boardId)
+        public async Task PostTabAsync(Guid id, Guid ownerId, string name, Guid boardId)
         {
-            var tab = new Tab(id, name, boardId);
+            var owner = await _userRepository.GetAsync(ownerId);
+            if (owner == null)
+            {
+                throw new ArgumentException($"Invalid owner id: user with id: {ownerId} doesn't exist.", nameof(ownerId));
+            }
 
+            var board = await _boardRepository.GetAsync(boardId);
+            if (board == null)
+            {
+                throw new ArgumentException($"Invalid board id: board with id: {boardId} doesn't exist.", nameof(boardId));
+            }
+
+            var tab = new Tab(id, name, boardId);
             await _tabRepository.AddAsync(tab);
-             
             await Task.CompletedTask;
         }
     }

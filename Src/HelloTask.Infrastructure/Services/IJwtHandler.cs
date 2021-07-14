@@ -1,9 +1,10 @@
-﻿using HelloTask.Infrastructure.DTO;
+﻿using System;
+using HelloTask.Infrastructure.DTO;
 
 namespace HelloTask.Infrastructure.Services
 {
     public interface IJwtHandler
     {
-        JwtDto CreateToken(string email, string role);
+        JwtDto CreateToken(Guid userId, string role);
     }
 }

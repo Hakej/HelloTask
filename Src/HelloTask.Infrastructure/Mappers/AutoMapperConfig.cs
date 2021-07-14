@@ -11,7 +11,9 @@ namespace HelloTask.Infrastructure.Mappers
             {
                 cfg.CreateMap<Assignment, AssignmentDto>();
                 cfg.CreateMap<Tab, TabDto>();
+                cfg.CreateMap<Tab, TabDetailsDto>();
                 cfg.CreateMap<Board, BoardDto>();
+                cfg.CreateMap<Board, BoardDetailsDto>();
                 cfg.CreateMap<User, UserDto>();
             })
             .CreateMapper();

@@ -7,9 +7,9 @@ namespace HelloTask.Infrastructure.Services
 {
     public interface ITabService : IService
     {
-        Task<TabDto> GetTabAsync(Guid id);
+        Task<TabDetailsDto> GetTabAsync(Guid id);
         Task<IEnumerable<TabDto>> GetAllTabsAsync();
-        Task PostTabAsync(Guid id, string name, Guid boardId);
+        Task PostTabAsync(Guid id, Guid ownerId, string name, Guid boardId);
         Task<IEnumerable<AssignmentDto>> GetAssignmentsFromTabAsync(Guid tabId);
     }
 }

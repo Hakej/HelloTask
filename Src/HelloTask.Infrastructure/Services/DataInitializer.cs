@@ -9,6 +9,15 @@ namespace HelloTask.Infrastructure.Services
 {
     public class DataInitializer : IDataInitializer
     {
+        public static readonly IList<Guid> UserIds = new List<Guid>()
+        {
+            Guid.Parse("7ca0934c-6a99-49a8-9a1f-6b9c737cb44a"),
+            Guid.Parse("0e34937b-8f51-4d70-b42c-f0505b766955"),
+            Guid.Parse("8df40fa9-8552-4626-9087-f136792351b0")
+        };
+
+        public static readonly IList<Guid> AdminIds = new List<Guid>();
+
         public static readonly IList<Guid> BoardIds = new List<Guid>()
         {
             Guid.Parse("a2156e73-f1df-44ed-bd35-d9bdb5f18962"),
@@ -44,56 +53,48 @@ namespace HelloTask.Infrastructure.Services
 
             await SeedUsersAsync();
             
-            var boardIds = await SeedBoards();
-            var tabIds = await SeedTabs();
+            await SeedBoards();
+            await SeedTabs();
             await SeedAssignments();
 
             _logger.LogTrace("Data was initialized.");
         }
 
 
-        private async Task<List<Guid>> SeedBoards()
+        private async Task SeedBoards()
         {
             _logger.LogTrace("Initializing boards...");
 
             var amountOfSeeds = BoardIds.Count;
             var tasks = new List<Task>();
-            var boardsIds = new List<Guid>();
             for (var i = 1; i <= amountOfSeeds; i++)
             {
                 var id = BoardIds[i-1];
                 var boardName = $"board{i}";
-                tasks.Add(_boardService.PostBoardAsync(id, boardName));
-                boardsIds.Add(id);
+                tasks.Add(_boardService.PostBoardAsync(id,  UserIds[i-1], boardName));
             }
 
             await Task.WhenAll(tasks);
 
             _logger.LogTrace("Boards were initialized.");
-
-            return boardsIds;
         }
 
-        private async Task<List<Guid>> SeedTabs()
+        private async Task SeedTabs()
         {
             _logger.LogTrace("Initializing tabs...");
 
             var amountOfSeeds = Math.Min(BoardIds.Count, TabIds.Count);
             var tasks = new List<Task>();
-            var tabIds = new List<Guid>();
             for (var i = 1; i <= amountOfSeeds; i++)
             {
                 var id = TabIds[i - 1];
                 var tabName = $"tab{i}";
-                tasks.Add(_tabService.PostTabAsync(id, tabName, BoardIds[i-1]));
-                tabIds.Add(id);
+                tasks.Add(_tabService.PostTabAsync(id, UserIds[i-1], tabName, BoardIds[i-1]));
             }
 
             await Task.WhenAll(tasks);
 
             _logger.LogTrace("Tabs were initialized.");
-
-            return tabIds;
         }
 
         private async Task SeedAssignments()
@@ -106,7 +107,7 @@ namespace HelloTask.Infrastructure.Services
             {
                 var id = Guid.NewGuid();
                 var assignmentName = $"assignment{i}";
-                tasks.Add(_assignmentService.PostAssignmentAsync(id, assignmentName, "Test description", TabIds[i - 1]));
+                tasks.Add(_assignmentService.PostAssignmentAsync(id, UserIds[i-1], assignmentName, "Test description", TabIds[i - 1]));
             }
 
             await Task.WhenAll(tasks);
@@ -119,16 +120,16 @@ namespace HelloTask.Infrastructure.Services
             _logger.LogTrace("Initializing Users...");
 
             var tasks = new List<Task>();
-            for (var i = 1; i <= 10; i++)
+            for (var i = 1; i <= UserIds.Count; i++)
             {
-                var id = Guid.NewGuid();
+                var id = UserIds[i-1];
                 var username = $"user{i}";
                 tasks.Add(_userService.RegisterUserAsync(id, $"{username}@test.com", username, "secret", "user"));
             }
 
-            for (var i = 1; i <= 3; i++)
+            for (var i = 1; i <= AdminIds.Count; i++)
             {
-                var id = Guid.NewGuid();
+                var id = AdminIds[i-1];
                 var username = $"admin{i}";
                 tasks.Add(_userService.RegisterUserAsync(id, $"{username}@test.com", username, "secret", "admin"));
             }

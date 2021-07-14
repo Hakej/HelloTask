@@ -17,7 +17,7 @@ namespace HelloTask.Infrastructure.Handlers.Boards
 
         public async Task HandleAsync(AddBoardCommand command)
         {
-            await _boardService.PostBoardAsync(Guid.NewGuid(), command.Name);
+            await _boardService.PostBoardAsync(Guid.NewGuid(), command.UserId, command.Name);
         }
     }
 }

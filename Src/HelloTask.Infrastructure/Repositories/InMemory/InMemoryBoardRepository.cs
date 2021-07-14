@@ -39,9 +39,8 @@ namespace HelloTask.Infrastructure.Repositories.InMemory
 
         public async Task UpdateAsync(Board board)
         {
-            throw new NotImplementedException();
-
             await Task.CompletedTask;
+            throw new NotImplementedException();
         }
     }
 }

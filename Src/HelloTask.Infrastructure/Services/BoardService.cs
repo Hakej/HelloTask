@@ -13,20 +13,22 @@ namespace HelloTask.Infrastructure.Services
     {
         private readonly IBoardRepository _boardRepository;
         private readonly ITabRepository _tabRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
-        public BoardService(IMapper mapper, IBoardRepository boardRepository, ITabRepository tabRepository)
+        public BoardService(IMapper mapper, IBoardRepository boardRepository, ITabRepository tabRepository, IUserRepository userRepository)
         {
             _mapper = mapper;
             _boardRepository = boardRepository;
             _tabRepository = tabRepository;
+            _userRepository = userRepository;
         }
 
-        public async Task<BoardDto> GetBoardAsync(Guid id)
+        public async Task<BoardDetailsDto> GetBoardAsync(Guid id)
         {
             var board = await _boardRepository.GetAsync(id);
 
-            return _mapper.Map<Board, BoardDto>(board);
+            return _mapper.Map<Board, BoardDetailsDto>(board);
         }
 
         public async Task<IEnumerable<BoardDto>> GetAllBoardsAsync()
@@ -44,8 +46,15 @@ namespace HelloTask.Infrastructure.Services
             return _mapper.Map<IEnumerable<Tab>, IEnumerable<TabDto>>(tabsFromBoard);
         }
 
-        public async Task PostBoardAsync(Guid id, string name)
+        public async Task PostBoardAsync(Guid id, Guid ownerId, string name)
         {
+            var owner = await _userRepository.GetAsync(ownerId);
+
+            if (owner == null)
+            {
+                throw new ArgumentException(nameof(owner), $"Invalid owner id: user with id: {ownerId} doesn't exist.");
+            }
+
             var board = new Board(id, name);
 
             await _boardRepository.AddAsync(board);

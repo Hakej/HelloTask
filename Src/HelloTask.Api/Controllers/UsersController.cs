@@ -54,7 +54,7 @@ namespace HelloTask.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] RegisterUserCommand command)
         {
-            await CommandDispatcher.DispatchAsync(command);
+            await DispatchAsync(command);
 
             return Created("users/", new object());
         }
