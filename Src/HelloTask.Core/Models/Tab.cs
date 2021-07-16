@@ -10,13 +10,14 @@ namespace HelloTask.Core.Models
         public string Name { get; }
         public ICollection<Assignment> Assignments { get; }
 
-        public Guid BoardId { get; }
+        public Board Board { get; }
 
-        public Tab(Guid id, string name, Guid boardId)
+        public Tab(Guid id, User owner, string name, Board board)
         {
             Id = id;
+            Owner = owner;
             Name = name;
-            BoardId = boardId;
+            Board = board;
         }
     }
 }

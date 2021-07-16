@@ -5,6 +5,7 @@ using AutoMapper;
 using HelloTask.Core.Models;
 using HelloTask.Core.Repositories;
 using HelloTask.Infrastructure.DTO;
+using HelloTask.Infrastructure.Extensions;
 
 namespace HelloTask.Infrastructure.Services
 {
@@ -27,31 +28,22 @@ namespace HelloTask.Infrastructure.Services
         {
             var assignment = await _assignmentRepository.GetAsync(id);
 
-            return _mapper.Map<Assignment, AssignmentDto>(assignment);
+            return _mapper.Map<AssignmentDto>(assignment);
         }
 
         public async Task<IEnumerable<AssignmentDto>> GetAllAssignmentsAsync()
         {
             var assignments = await _assignmentRepository.GetAllAsync();
 
-            return _mapper.Map<IEnumerable<Assignment>, IEnumerable<AssignmentDto>>(assignments);
+            return _mapper.Map<IEnumerable<AssignmentDto>>(assignments);
         }
 
         public async Task PostAssignmentAsync(Guid id, Guid ownerId, string name, string description, Guid tabId)
         {
-            var owner = await _userRepository.GetAsync(ownerId);
-            if (owner == null)
-            {
-                throw new ArgumentException($"Invalid owner id: user with id: {ownerId} doesn't exist.", nameof(ownerId));
-            }
+            var owner = await _userRepository.GetOrFailAsync(ownerId);
+            var tab = await _tabRepository.GetOrFailAsync(tabId);
 
-            var tab = await _tabRepository.GetAsync(tabId);
-            if (tab == null)
-            {
-                throw new ArgumentException($"Can't add assignment - tab with id: {tabId} doesn't exist.", nameof(tabId));
-            }
-
-            var assignment = new Assignment(id, owner, name, description, tabId);
+            var assignment = new Assignment(id, owner, name, description, tab);
             await _assignmentRepository.AddAsync(assignment);
             await Task.CompletedTask;
         }

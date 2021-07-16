@@ -9,15 +9,15 @@ namespace HelloTask.Core.Models
         public string Name { get; }
         public string Description { get; }
 
-        public Guid TabId { get; }
+        public Tab Tab { get; }
 
-        public Assignment(Guid id, User owner, string name, string description, Guid tabId)
+        public Assignment(Guid id, User owner, string name, string description, Tab tab)
         {
             Id = id;
             Owner = owner;
             Name = name;
             Description = description;
-            TabId = tabId;
+            Tab = tab;
         }
     }
 }

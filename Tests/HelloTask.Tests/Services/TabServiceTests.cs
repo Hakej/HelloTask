@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using HelloTask.Core.Models;
 using HelloTask.Core.Repositories;
+using HelloTask.Infrastructure.DTO;
 using HelloTask.Infrastructure.Mappers;
 using HelloTask.Infrastructure.Services;
 using Moq;
@@ -22,12 +24,13 @@ namespace HelloTask.Tests.Services
 
             var mapper = AutoMapperConfig.Initialize();
 
-            var ourTabId = DataInitializer.TabIds[0];
-            var otherTabId = DataInitializer.TabIds[1];
-
-            var owner = new User(DataInitializer.UserIds[0], "", "", "", "", "");
+            var owner = new User(Guid.NewGuid(), "", "", "", "", "");
+            var board = new Board(Guid.NewGuid(), owner, "Mock board");
             
-            var ourAssignment = new Assignment(Guid.NewGuid(), owner, "Our assignment", "Our description", ourTabId);
+            var ourTab = new Tab(Guid.NewGuid(), owner, "", board);
+            var otherTabId = new Tab(Guid.NewGuid(), owner, "", board);
+
+            var ourAssignment = new Assignment(Guid.NewGuid(), owner, "Our assignment", "Our description", ourTab);
             var otherAssignment = new Assignment(Guid.NewGuid(), owner, "Other assignment", "Other description", otherTabId);
 
             assignmentRepository.Setup(s => s.GetAllAsync())
@@ -39,10 +42,11 @@ namespace HelloTask.Tests.Services
                                     } as IEnumerable<Assignment>));
             
             var tabService = new TabService(mapper, tabRepository.Object, assignmentRepository.Object, userRepositoryMock.Object, boardRepositoryMock.Object);
-            var result = await tabService.GetAssignmentsFromTabAsync(ourTabId);
-                
-            Assert.Contains(result, item => item.Id == ourAssignment.Id);
-            Assert.DoesNotContain(result, item => item.Id == otherAssignment.Id);
+            var result = await tabService.GetAssignmentsFromTabAsync(ourTab.Id);
+
+            var assignmentDtos = result as AssignmentDto[] ?? result.ToArray();
+            Assert.Contains(assignmentDtos, item => item.Id == ourAssignment.Id);
+            Assert.DoesNotContain(assignmentDtos, item => item.Id == otherAssignment.Id);
         }
     }
 }

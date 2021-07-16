@@ -6,6 +6,7 @@ using AutoMapper;
 using HelloTask.Core.Models;
 using HelloTask.Core.Repositories;
 using HelloTask.Infrastructure.DTO;
+using HelloTask.Infrastructure.Extensions;
 
 namespace HelloTask.Infrastructure.Services
 {
@@ -30,41 +31,31 @@ namespace HelloTask.Infrastructure.Services
         {
             var tab = await _tabRepository.GetAsync(id);
 
-            return _mapper.Map<Tab, TabDetailsDto>(tab);
+            return _mapper.Map<TabDetailsDto>(tab);
         }
 
         public async Task<IEnumerable<TabDto>> GetAllTabsAsync()
         {
             var tabs = await _tabRepository.GetAllAsync();
 
-            return _mapper.Map<IEnumerable<Tab>, IEnumerable<TabDto>>(tabs);
+            return _mapper.Map<IEnumerable<TabDto>>(tabs);
         }
         
         public async Task<IEnumerable<AssignmentDto>> GetAssignmentsFromTabAsync(Guid tabId)
         {
             var assignments = await _assignmentRepository.GetAllAsync();
-            var foundAssignments = assignments.Where(x => x.TabId == tabId);
+            var foundAssignments = assignments.Where(x => x.Tab.Id == tabId);
 
-            return _mapper.Map<IEnumerable<Assignment>, IEnumerable<AssignmentDto>>(foundAssignments);
+            return _mapper.Map<IEnumerable<AssignmentDto>>(foundAssignments);
         }
 
         public async Task PostTabAsync(Guid id, Guid ownerId, string name, Guid boardId)
         {
-            var owner = await _userRepository.GetAsync(ownerId);
-            if (owner == null)
-            {
-                throw new ArgumentException($"Invalid owner id: user with id: {ownerId} doesn't exist.", nameof(ownerId));
-            }
-
-            var board = await _boardRepository.GetAsync(boardId);
-            if (board == null)
-            {
-                throw new ArgumentException($"Invalid board id: board with id: {boardId} doesn't exist.", nameof(boardId));
-            }
-
-            var tab = new Tab(id, name, boardId);
+            var owner = await _userRepository.GetOrFailAsync(ownerId);
+            var board = await _boardRepository.GetOrFailAsync(boardId);
+            var tab = new Tab(id, owner, name, board);
+            
             await _tabRepository.AddAsync(tab);
-            await Task.CompletedTask;
         }
     }
 }

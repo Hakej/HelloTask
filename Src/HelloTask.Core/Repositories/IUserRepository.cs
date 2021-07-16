@@ -11,7 +11,7 @@ namespace HelloTask.Core.Repositories
         Task<User> GetByEmailAsync(string email);
         Task<IEnumerable<User>> GetAllAsync();
         Task AddAsync(User user);
-        Task RemoveAsync(Guid id);
         Task UpdateAsync(User user);
+        Task DeleteAsync(User user);
     }
 }

@@ -25,25 +25,14 @@ namespace HelloTask.Infrastructure.Repositories.InMemory
             Users.Add(user);
             await Task.CompletedTask;
         }
-
-        public async Task RemoveAsync(Guid id)
-        {
-            var user = await GetAsync(id);
-
-            if (user == null)
-            {
-                throw new Exception("User to delete not found.");
-            }
-
-            Users.Remove(user);
-
-            await Task.CompletedTask;
-        }
-
+        
         public async Task UpdateAsync(User user)
         {
             await Task.CompletedTask;
             throw new NotImplementedException();
         }
+
+        public Task DeleteAsync(User user)
+            => Task.FromResult(Users.Remove(user));
     }
 }
