@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using HelloTask.Core.Models;
+using HelloTask.Core.Domain;
 using HelloTask.Infrastructure.DTO;
 
 namespace HelloTask.Infrastructure.Mappers

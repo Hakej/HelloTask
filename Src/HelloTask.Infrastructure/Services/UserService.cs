@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using HelloTask.Core.Models;
+using HelloTask.Core.Domain;
 using HelloTask.Core.Repositories;
 using HelloTask.Infrastructure.DTO;
+using HelloTask.Infrastructure.Exceptions;
 using HelloTask.Infrastructure.Extensions;
 
 namespace HelloTask.Infrastructure.Services
@@ -49,7 +50,7 @@ namespace HelloTask.Infrastructure.Services
 
             if (user != null)
             {
-                throw new Exception($"User with email '{email}' already exists.");
+                throw new ServiceException(Exceptions.ErrorCodes.EmailInUse, $"User with email '{email}' already exists.");
             }
 
             var salt = _encrypter.GetSalt(password);
@@ -65,7 +66,7 @@ namespace HelloTask.Infrastructure.Services
 
             if (user == null)
             {
-                throw new Exception("Invalid credentials.");
+                throw new ServiceException(Exceptions.ErrorCodes.InvalidCredentials, "Invalid credentials.");
             }
             
             var hash = _encrypter.GetHash(password, user.Salt);
@@ -75,7 +76,7 @@ namespace HelloTask.Infrastructure.Services
                 return;
             }
 
-            throw new Exception("Invalid credentials.");
+            throw new ServiceException(Exceptions.ErrorCodes.InvalidCredentials, "Invalid credentials.");
         }
 
         public async Task DeleteAsync(Guid userId)
@@ -87,7 +88,7 @@ namespace HelloTask.Infrastructure.Services
         public async Task ChangeUsername(Guid userId, string newUsername)
         {
             var user = await _userRepository.GetOrFailAsync(userId);
-            user.ChangeUsername(newUsername);
+            user.SetUsername(newUsername);
         }
     }
 }

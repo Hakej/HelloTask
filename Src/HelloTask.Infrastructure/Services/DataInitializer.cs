@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using HelloTask.Core.Models;
 using HelloTask.Infrastructure.Extensions;
 using Microsoft.Extensions.Logging;
 

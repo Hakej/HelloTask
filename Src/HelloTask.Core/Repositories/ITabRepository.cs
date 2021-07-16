@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using HelloTask.Core.Models;
+using HelloTask.Core.Domain;
 
 namespace HelloTask.Core.Repositories
 {

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using HelloTask.Core.Models;
+using HelloTask.Core.Domain;
 
 namespace HelloTask.Infrastructure.DTO
 {

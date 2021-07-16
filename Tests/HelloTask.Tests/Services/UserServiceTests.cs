@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using HelloTask.Core.Models;
+using HelloTask.Core.Domain;
 using HelloTask.Core.Repositories;
-using HelloTask.Infrastructure.DTO;
-using HelloTask.Infrastructure.Mappers;
+using HelloTask.Infrastructure.Exceptions;
 using HelloTask.Infrastructure.Services;
 using Moq;
 using Xunit;
@@ -15,7 +13,7 @@ namespace HelloTask.Tests.Services
     public class UserServiceTests
     {
         [Fact]
-        public async Task RegisterUser_WithAlreadyRegisteredEmail_ThrowsException()
+        public async Task RegisterUser_WithAlreadyRegisteredEmail_ThrowsServiceException()
         {
             var userRepositoryMock = new Mock<IUserRepository>();
             var mapperMock = new Mock<IMapper>();
@@ -28,7 +26,7 @@ namespace HelloTask.Tests.Services
             
             var userService = new UserService(mapperMock.Object, userRepositoryMock.Object, encrypterMock.Object);
 
-            await Assert.ThrowsAsync<Exception>(() =>
+            await Assert.ThrowsAsync<ServiceException>(() =>
                 userService.RegisterUserAsync(Guid.NewGuid(), mockEmail, "test", "test", "test"));
         }
 

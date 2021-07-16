@@ -1,21 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace HelloTask.Core.Models
+namespace HelloTask.Core.Domain
 {
-    public class Board
+    public class Tab
     {
         public Guid Id { get; }
         public User Owner { get; }
         public string Name { get; }
+        public ICollection<Assignment> Assignments { get; }
 
-        public ICollection<Tab> Tabs { get; }
+        public Board Board { get; }
 
-        public Board(Guid id, User owner, string name)
+        public Tab(Guid id, User owner, string name, Board board)
         {
             Id = id;
             Owner = owner;
             Name = name;
+            Board = board;
         }
     }
 }

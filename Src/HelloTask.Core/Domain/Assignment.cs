@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HelloTask.Core.Models
+namespace HelloTask.Core.Domain
 {
     public class Assignment
     {

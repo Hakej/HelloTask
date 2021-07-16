@@ -5,11 +5,14 @@ using HelloTask.Infrastructure.Commands.Users;
 using HelloTask.Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NLog;
 
 namespace HelloTask.Api.Controllers
 {
     public class UsersController : ApiControllerBase
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        
         private readonly IUserService _userService;
 
         public UsersController(IUserService userService, 
@@ -21,6 +24,8 @@ namespace HelloTask.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
+            Logger.Info("Fetching users.");
+            
             var users = await _userService.GetAllUsersAsync();
 
             return Json(users);

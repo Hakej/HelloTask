@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AutoMapper;
-using HelloTask.Core.Models;
+using HelloTask.Core.Domain;
 using HelloTask.Core.Repositories;
 using HelloTask.Infrastructure.Services;
 using Moq;

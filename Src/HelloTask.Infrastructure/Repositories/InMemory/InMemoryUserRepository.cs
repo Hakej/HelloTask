@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using HelloTask.Core.Models;
+using HelloTask.Core.Domain;
 using HelloTask.Core.Repositories;
 
 namespace HelloTask.Infrastructure.Repositories.InMemory

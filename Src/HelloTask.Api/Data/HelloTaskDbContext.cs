@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using HelloTask.Core.Models;
+﻿using HelloTask.Core.Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace HelloTask.Data
 {
