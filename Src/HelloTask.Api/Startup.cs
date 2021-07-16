@@ -1,5 +1,6 @@
 using System.Text;
 using Autofac;
+using HelloTask.Api.Framework;
 using HelloTask.Data;
 using HelloTask.Infrastructure.IoC;
 using HelloTask.Infrastructure.Services;
@@ -91,12 +92,15 @@ namespace HelloTask.Api
                 endpoints.MapControllers();
             });
 
+            // TODO: Custom exception handler middleware doesn't work
+            app.UseCustomExceptionHandler();
+            
             var generalSettings = app.ApplicationServices.GetService<GeneralSettings>();
 
             if (generalSettings.SeedData)
             {
                 var dataInitializer = app.ApplicationServices.GetService<IDataInitializer>();
-                dataInitializer.SeedAsync();
+                dataInitializer?.SeedAsync();
             }
         }
         public void ConfigureContainer(ContainerBuilder builder)
