@@ -18,12 +18,13 @@ namespace HelloTask.Infrastructure.Services
             _settings = settings;
         }
 
-        public JwtDto CreateToken(string email, string role)
+        public JwtDto CreateToken(Guid userId, string role)
         {
             var now = DateTime.UtcNow;
             var claims = new Claim[]
             {
-                new(JwtRegisteredClaimNames.Sub, email),
+                new(JwtRegisteredClaimNames.Sub, userId.ToString()),
+                new(JwtRegisteredClaimNames.UniqueName, userId.ToString()),
                 new(ClaimTypes.Role, role),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new(JwtRegisteredClaimNames.Iat, now.ToTimestamp().ToString(), ClaimValueTypes.Integer64)

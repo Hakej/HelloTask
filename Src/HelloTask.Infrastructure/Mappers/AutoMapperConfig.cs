@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using HelloTask.Core.Models;
+using HelloTask.Core.Domain;
 using HelloTask.Infrastructure.DTO;
 
 namespace HelloTask.Infrastructure.Mappers
@@ -11,7 +11,9 @@ namespace HelloTask.Infrastructure.Mappers
             {
                 cfg.CreateMap<Assignment, AssignmentDto>();
                 cfg.CreateMap<Tab, TabDto>();
+                cfg.CreateMap<Tab, TabDetailsDto>();
                 cfg.CreateMap<Board, BoardDto>();
+                cfg.CreateMap<Board, BoardDetailsDto>();
                 cfg.CreateMap<User, UserDto>();
             })
             .CreateMapper();

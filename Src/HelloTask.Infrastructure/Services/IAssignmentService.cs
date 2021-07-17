@@ -9,6 +9,6 @@ namespace HelloTask.Infrastructure.Services
     {
         Task<AssignmentDto> GetAssignmentAsync(Guid id);
         Task<IEnumerable<AssignmentDto>> GetAllAssignmentsAsync();
-        Task PostAssignmentAsync(Guid id, string name, string description, Guid tabId);
+        Task PostAssignmentAsync(Guid id, Guid ownerId, string name, string description, Guid tabId);
     }
 }

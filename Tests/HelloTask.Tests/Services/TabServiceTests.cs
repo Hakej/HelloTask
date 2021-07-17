@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using HelloTask.Core.Models;
+using HelloTask.Core.Domain;
 using HelloTask.Core.Repositories;
+using HelloTask.Infrastructure.DTO;
 using HelloTask.Infrastructure.Mappers;
 using HelloTask.Infrastructure.Services;
 using Moq;
@@ -13,18 +15,23 @@ namespace HelloTask.Tests.Services
     public class TabServiceTests
     {
         [Fact]
-        public async Task get_assignments_from_tab_async_should_return_the_assignments_only_from_this_tab()
+        public async Task Get_AssignmentsFromTabAsync_ReturnsAssignmentsOnlyFromThisTab()
         {
             var assignmentRepository = new Mock<IAssignmentRepository>();
             var tabRepository = new Mock<ITabRepository>();
+            var userRepositoryMock = new Mock<IUserRepository>();
+            var boardRepositoryMock = new Mock<IBoardRepository>();
 
             var mapper = AutoMapperConfig.Initialize();
 
-            var ourTabId = DataInitializer.TabIds[0];
-            var otherTabId = DataInitializer.TabIds[1];
+            var owner = new User(Guid.NewGuid(), "", "", "", "", "");
+            var board = new Board(Guid.NewGuid(), owner, "Mock board");
             
-            var ourAssignment = new Assignment(Guid.NewGuid(), "Our assignment", "Our description", ourTabId);
-            var otherAssignment = new Assignment(Guid.NewGuid(), "Other assignment", "Other description", otherTabId);
+            var ourTab = new Tab(Guid.NewGuid(), owner, "", board);
+            var otherTabId = new Tab(Guid.NewGuid(), owner, "", board);
+
+            var ourAssignment = new Assignment(Guid.NewGuid(), owner, "Our assignment", "Our description", ourTab);
+            var otherAssignment = new Assignment(Guid.NewGuid(), owner, "Other assignment", "Other description", otherTabId);
 
             assignmentRepository.Setup(s => s.GetAllAsync())
                                 .Returns(
@@ -34,11 +41,12 @@ namespace HelloTask.Tests.Services
                                         otherAssignment
                                     } as IEnumerable<Assignment>));
             
-            var tabService = new TabService(mapper, tabRepository.Object, assignmentRepository.Object);
-            var result = await tabService.GetAssignmentsFromTabAsync(ourTabId);
-                
-            Assert.Contains(result, item => item.Id == ourAssignment.Id);
-            Assert.DoesNotContain(result, item => item.Id == otherAssignment.Id);
+            var tabService = new TabService(mapper, tabRepository.Object, assignmentRepository.Object, userRepositoryMock.Object, boardRepositoryMock.Object);
+            var result = await tabService.GetAssignmentsFromTabAsync(ourTab.Id);
+
+            var assignmentDtos = result as AssignmentDto[] ?? result.ToArray();
+            Assert.Contains(assignmentDtos, item => item.Id == ourAssignment.Id);
+            Assert.DoesNotContain(assignmentDtos, item => item.Id == otherAssignment.Id);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AutoMapper;
-using HelloTask.Core.Models;
+using HelloTask.Core.Domain;
 using HelloTask.Core.Repositories;
 using HelloTask.Infrastructure.Services;
 using Moq;
@@ -12,34 +12,40 @@ namespace HelloTask.Tests.Services
     public class AssignmentServiceTests
     {
         [Fact]
-        public async Task post_assignment_async_with_valid_tabid_should_invoke_add_async_on_repository_once()
+        public async Task PostAssignmentAsync_WithValidTabId_InvokesAddAsyncOnRepositoryOnce()
         {
-            var assignmentRepository = new Mock<IAssignmentRepository>();
-            var tabRepository = new Mock<ITabRepository>();
+            var assignmentRepositoryMock = new Mock<IAssignmentRepository>();
+            var tabRepositoryMock = new Mock<ITabRepository>();
             var mapperMock = new Mock<IMapper>();
+            var userRepositoryMock = new Mock<IUserRepository>();
 
-            var tabId = Guid.NewGuid();
+            var owner = new User(Guid.NewGuid(), "", "", "", "", "");
+            userRepositoryMock.Setup(s => s.GetAsync(owner.Id))
+                              .Returns(Task.FromResult(owner));
 
-            tabRepository.Setup(s => s.GetAsync(tabId))
-                .Returns(Task.FromResult(new Tab(tabId, "Mock tab", Guid.NewGuid())));
+            var board = new Board(Guid.NewGuid(), owner, "Mock board");
+            var tab = new Tab(new Guid(), owner, "Mock tab", board);
+            tabRepositoryMock.Setup(s => s.GetAsync(tab.Id))
+                         .Returns(Task.FromResult(tab));
 
-            var assignmentService = new AssignmentService(mapperMock.Object, assignmentRepository.Object, tabRepository.Object);
-            await assignmentService.PostAssignmentAsync(Guid.NewGuid(), "Mock task", "Mock description", tabId);
+            var assignmentService = new AssignmentService(mapperMock.Object, assignmentRepositoryMock.Object, tabRepositoryMock.Object, userRepositoryMock.Object);
+            await assignmentService.PostAssignmentAsync(Guid.NewGuid(), owner.Id, "Mock task", "Mock description", tab.Id);
 
-            assignmentRepository.Verify(x => x.AddAsync(It.IsAny<Assignment>()), Times.Once);
+            assignmentRepositoryMock.Verify(x => x.AddAsync(It.IsAny<Assignment>()), Times.Once);
         }
 
         [Fact]
-        public async Task post_assignment_async_with_invalid_tabid_should_throw_exception()
+        public async Task PostAssignmentAsync_WithInvalidTabId_ThrowsArgumentException()
         {
             var assignmentRepository = new Mock<IAssignmentRepository>();
             var tabRepository = new Mock<ITabRepository>();
             var mapperMock = new Mock<IMapper>();
+            var userRepositoryMock = new Mock<IUserRepository>();
 
-            var assignmentService = new AssignmentService(mapperMock.Object, assignmentRepository.Object, tabRepository.Object);
+            var assignmentService = new AssignmentService(mapperMock.Object, assignmentRepository.Object, tabRepository.Object, userRepositoryMock.Object);
 
-            await Assert.ThrowsAsync<Exception>(() =>
-                assignmentService.PostAssignmentAsync(Guid.NewGuid(), "Mock task", "Mock description", Guid.Empty));
+            await Assert.ThrowsAsync<ArgumentException>(() =>
+                assignmentService.PostAssignmentAsync(Guid.NewGuid(), DataInitializer.UserIds[0],  "Mock task", "Mock description", Guid.Empty));
         }
     }
 }

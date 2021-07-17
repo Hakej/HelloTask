@@ -12,5 +12,7 @@ namespace HelloTask.Infrastructure.Services
         Task<IEnumerable<UserDto>> GetAllUsersAsync();
         Task RegisterUserAsync(Guid id, string email, string username, string password, string role);
         Task LoginAsync(string email, string password);
+        Task DeleteAsync(Guid userId);
+        Task ChangeUsername(Guid userId, string newUsername);
     }
 }

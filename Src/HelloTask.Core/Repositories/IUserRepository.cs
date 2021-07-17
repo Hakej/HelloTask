@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using HelloTask.Core.Models;
+using HelloTask.Core.Domain;
 
 namespace HelloTask.Core.Repositories
 {
@@ -11,7 +11,7 @@ namespace HelloTask.Core.Repositories
         Task<User> GetByEmailAsync(string email);
         Task<IEnumerable<User>> GetAllAsync();
         Task AddAsync(User user);
-        Task RemoveAsync(Guid id);
         Task UpdateAsync(User user);
+        Task DeleteAsync(User user);
     }
 }

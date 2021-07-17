@@ -22,7 +22,7 @@ namespace HelloTask.Api.Controllers
         public async Task<IActionResult> Post([FromBody] LoginCommand command)
         {
             command.TokenId = Guid.NewGuid();
-            await CommandDispatcher.DispatchAsync(command);
+            await DispatchAsync(command);
             var jwt = _cache.GetJwt(command.TokenId);
 
             return Json(jwt);

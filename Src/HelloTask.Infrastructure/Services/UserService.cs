@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using HelloTask.Core.Models;
+using HelloTask.Core.Domain;
 using HelloTask.Core.Repositories;
 using HelloTask.Infrastructure.DTO;
+using HelloTask.Infrastructure.Exceptions;
+using HelloTask.Infrastructure.Extensions;
 
 namespace HelloTask.Infrastructure.Services
 {
@@ -25,21 +27,21 @@ namespace HelloTask.Infrastructure.Services
         {
             var user = await _userRepository.GetAsync(id);
 
-            return _mapper.Map<User, UserDto>(user);
+            return _mapper.Map<UserDto>(user);
         }
 
         public async Task<UserDto> GetUserByEmailAsync(string email)
         {
             var user = await _userRepository.GetByEmailAsync(email);
 
-            return _mapper.Map<User, UserDto>(user);
+            return _mapper.Map<UserDto>(user);
         }
 
         public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
         {
             var users = await _userRepository.GetAllAsync();
 
-            return _mapper.Map<IEnumerable<User>, IEnumerable<UserDto>>(users);
+            return _mapper.Map<IEnumerable<UserDto>>(users);
         }
 
         public async Task RegisterUserAsync(Guid id, string email, string username, string password, string role)
@@ -48,7 +50,7 @@ namespace HelloTask.Infrastructure.Services
 
             if (user != null)
             {
-                throw new Exception($"User with email '{email}' already exists.");
+                throw new ServiceException(Exceptions.ErrorCodes.EmailInUse, $"User with email '{email}' already exists.");
             }
 
             var salt = _encrypter.GetSalt(password);
@@ -64,7 +66,7 @@ namespace HelloTask.Infrastructure.Services
 
             if (user == null)
             {
-                throw new Exception("Invalid credentials.");
+                throw new ServiceException(Exceptions.ErrorCodes.InvalidCredentials, "Invalid credentials.");
             }
             
             var hash = _encrypter.GetHash(password, user.Salt);
@@ -74,7 +76,19 @@ namespace HelloTask.Infrastructure.Services
                 return;
             }
 
-            throw new Exception("Invalid credentials.");
+            throw new ServiceException(Exceptions.ErrorCodes.InvalidCredentials, "Invalid credentials.");
+        }
+
+        public async Task DeleteAsync(Guid userId)
+        {
+            var user = await _userRepository.GetOrFailAsync(userId);
+            await _userRepository.DeleteAsync(user);
+        }
+
+        public async Task ChangeUsername(Guid userId, string newUsername)
+        {
+            var user = await _userRepository.GetOrFailAsync(userId);
+            user.SetUsername(newUsername);
         }
     }
 }

@@ -17,7 +17,7 @@ namespace HelloTask.Infrastructure.Handlers.Assignments
 
         public async Task HandleAsync(PostAssignment command)
         {
-            await _assignmentService.PostAssignmentAsync(Guid.NewGuid(), command.Name, command.Description, command.TabId);
+            await _assignmentService.PostAssignmentAsync(Guid.NewGuid(), command.UserId, command.Name, command.Description, command.TabId);
         }
     }
 }

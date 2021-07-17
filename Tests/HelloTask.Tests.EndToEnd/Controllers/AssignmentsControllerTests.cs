@@ -1,11 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using HelloTask.Infrastructure.Commands.Assignments;
-using HelloTask.Infrastructure.DTO;
-using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -18,7 +14,7 @@ namespace HelloTask.Tests.EndToEnd.Controllers
         }
 
         [Fact]
-        public async Task assignment_with_missing_tabid_should_return_internal_server_error()
+        public async Task PostingAssignment_WithoutAuthorization_ReturnsUnauthorizedError()
         {
             var command = new PostAssignment()
             {
@@ -29,30 +25,7 @@ namespace HelloTask.Tests.EndToEnd.Controllers
             var payload = GetPayload(command);
             var response = await Client.PostAsync("assignments", payload);
 
-            response.StatusCode.Should().BeEquivalentTo(HttpStatusCode.InternalServerError);
-        }
-
-        [Fact]
-        public async Task given_new_name_and_description_assignment_should_be_changed()
-        {
-            var command = new PutAssignment()
-            {
-                NewName = "New name",
-                NewDescription = "New description"
-            };
-
-            var payload = GetPayload(command);
-            var response = await Client.PutAsync("assignments", payload);
-
-            response.StatusCode.Should().BeEquivalentTo(HttpStatusCode.NoContent);
-        }
-
-        private async Task<IEnumerable<AssignmentDto>> GetAllAssignmentsAsync()
-        {
-            var response = await Client.GetAsync("assignments/");
-            var responseString = await response.Content.ReadAsStringAsync();
-
-            return JsonConvert.DeserializeObject<IEnumerable<AssignmentDto>>(responseString);
+            response.StatusCode.Should().BeEquivalentTo(HttpStatusCode.Unauthorized);
         }
     }
 }

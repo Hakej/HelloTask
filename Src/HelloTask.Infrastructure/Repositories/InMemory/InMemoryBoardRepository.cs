@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using HelloTask.Core.Models;
+using HelloTask.Core.Domain;
 using HelloTask.Core.Repositories;
+using HelloTask.Infrastructure.Exceptions;
 
 namespace HelloTask.Infrastructure.Repositories.InMemory
 {
@@ -29,7 +30,7 @@ namespace HelloTask.Infrastructure.Repositories.InMemory
 
             if (board == null)
             {
-                throw new Exception("Board to delete not found.");
+                throw new ServiceException(Exceptions.ErrorCodes.BoardNotFound, "Board to delete not found.");
             }
 
             Boards.Remove(board);
@@ -39,9 +40,8 @@ namespace HelloTask.Infrastructure.Repositories.InMemory
 
         public async Task UpdateAsync(Board board)
         {
-            throw new NotImplementedException();
-
             await Task.CompletedTask;
+            throw new NotImplementedException();
         }
     }
 }
