@@ -5,8 +5,6 @@ namespace HelloTask.Infrastructure.Exceptions
 {
     public class ServiceException : HelloTaskException
     {
-        public string Code { get; }
-
         protected ServiceException() 
         {
             
