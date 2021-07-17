@@ -3,6 +3,7 @@ using Autofac;
 using HelloTask.Api.Framework;
 using HelloTask.Data;
 using HelloTask.Infrastructure.IoC;
+using HelloTask.Infrastructure.Mongo;
 using HelloTask.Infrastructure.Services;
 using HelloTask.Infrastructure.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -96,8 +97,9 @@ namespace HelloTask.Api
             // TODO: Custom exception handler middleware doesn't work
             app.UseCustomExceptionHandler();
             
-            var generalSettings = app.ApplicationServices.GetService<GeneralSettings>();
+            MongoConfigurator.Initialize();
 
+            var generalSettings = app.ApplicationServices.GetService<GeneralSettings>();
             if (generalSettings.SeedData)
             {
                 var dataInitializer = app.ApplicationServices.GetService<IDataInitializer>();

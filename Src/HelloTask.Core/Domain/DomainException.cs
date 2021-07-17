@@ -4,8 +4,6 @@ namespace HelloTask.Core.Domain
 {
     public class DomainException : HelloTaskException
     {
-        public string Code { get; }
-
         protected DomainException() 
         {
             

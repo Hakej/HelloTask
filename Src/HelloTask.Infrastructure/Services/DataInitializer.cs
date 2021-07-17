@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using HelloTask.Infrastructure.Extensions;
 using Microsoft.Extensions.Logging;
@@ -116,6 +117,13 @@ namespace HelloTask.Infrastructure.Services
 
         public async Task SeedUsersAsync()
         {
+            var users = await _userService.GetAllUsersAsync();
+            if (users.Any())
+            {
+                _logger.LogTrace("Users are already initialized. Skipping...");
+                return;
+            }
+            
             _logger.LogTrace("Initializing Users...");
 
             var tasks = new List<Task>();

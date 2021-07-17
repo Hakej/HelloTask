@@ -21,6 +21,7 @@ namespace HelloTask.Infrastructure.IoC
 
             builder.RegisterModule<CommandModule>();
             builder.RegisterModule<RepositoryModule>();
+            builder.RegisterModule<MongoModule>();
             builder.RegisterModule<ServiceModule>();
             builder.RegisterModule(new SettingsModule(_configuration)); 
         }
