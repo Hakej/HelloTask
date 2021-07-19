@@ -6,19 +6,19 @@ namespace HelloTask.Core.Domain
     {
         public Guid Id { get; private set; }
         public string Email { get; private set; }
-        public string Password { get; private set; }
+        public string Password { get; private set; } 
         public string Salt { get; private set; }
         public string Username { get; private set; }
         public string Role { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
 
-        public User(Guid userId, string email, string username, string role,
+        public User(Guid id, string email, string username, string role,
             string password, string salt)
         {
-            Id = userId;
+            Id = id;
             Email = email.ToLowerInvariant();
-            Username = username;
+            SetUsername(username);
             Role = role;
             Password = password;
             Role = role;

@@ -1,4 +1,4 @@
-namespace HelloTask.Infrastructure.Repositories
+namespace HelloTask.Infrastructure.Repositories.Mongo
 {
     // Marker interface
     public interface IMongoRepository

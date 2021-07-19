@@ -1,7 +1,7 @@
 using System.Text;
 using Autofac;
 using HelloTask.Api.Framework;
-using HelloTask.Data;
+using HelloTask.Infrastructure.EF;
 using HelloTask.Infrastructure.IoC;
 using HelloTask.Infrastructure.Mongo;
 using HelloTask.Infrastructure.Services;
@@ -46,9 +46,8 @@ namespace HelloTask.Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "HelloTask", Version = "v1" });
             });
 
-            services.AddDbContext<HelloTaskDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("Default")));
-
+            services.AddDbContext<HelloTaskContext>();
+            
             services.AddAuthorization(x => x.AddPolicy("admin", p => p.RequireRole("admin")));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

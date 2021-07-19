@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using HelloTask.Infrastructure.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace HelloTask.Infrastructure.Services
@@ -66,15 +65,12 @@ namespace HelloTask.Infrastructure.Services
             _logger.LogTrace("Initializing boards...");
 
             var amountOfSeeds = BoardIds.Count;
-            var tasks = new List<Task>();
             for (var i = 1; i <= amountOfSeeds; i++)
             {
                 var id = BoardIds[i-1];
                 var boardName = $"board{i}";
-                tasks.Add(_boardService.PostBoardAsync(id,  UserIds[i-1], boardName));
+                await _boardService.PostBoardAsync(id,  UserIds[i-1], boardName);
             }
-
-            await Task.WhenAll(tasks);
 
             _logger.LogTrace("Boards were initialized.");
         }
@@ -84,15 +80,12 @@ namespace HelloTask.Infrastructure.Services
             _logger.LogTrace("Initializing tabs...");
 
             var amountOfSeeds = Math.Min(BoardIds.Count, TabIds.Count);
-            var tasks = new List<Task>();
             for (var i = 1; i <= amountOfSeeds; i++)
             {
                 var id = TabIds[i - 1];
                 var tabName = $"tab{i}";
-                tasks.Add(_tabService.PostTabAsync(id, UserIds[i-1], tabName, BoardIds[i-1]));
+                await _tabService.PostTabAsync(id, UserIds[i-1], tabName, BoardIds[i-1]);
             }
-
-            await Task.WhenAll(tasks);
 
             _logger.LogTrace("Tabs were initialized.");
         }
@@ -102,15 +95,12 @@ namespace HelloTask.Infrastructure.Services
             _logger.LogTrace("Initializing assignments...");
 
             var amountOfSeeds = TabIds.Count;
-            var tasks = new List<Task>();
             for (var i = 1; i <= amountOfSeeds; i++)
             {
                 var id = Guid.NewGuid();
                 var assignmentName = $"assignment{i}";
-                tasks.Add(_assignmentService.PostAssignmentAsync(id, UserIds[i-1], assignmentName, "Test description", TabIds[i - 1]));
+                await _assignmentService.PostAssignmentAsync(id, UserIds[i-1], assignmentName, "Test description", TabIds[i - 1]);
             }
-
-            await Task.WhenAll(tasks);
 
             _logger.LogTrace("Assignments were initialized.");
         }
@@ -126,22 +116,19 @@ namespace HelloTask.Infrastructure.Services
             
             _logger.LogTrace("Initializing Users...");
 
-            var tasks = new List<Task>();
             for (var i = 1; i <= UserIds.Count; i++)
             {
                 var id = UserIds[i-1];
                 var username = $"user{i}";
-                tasks.Add(_userService.RegisterUserAsync(id, $"{username}@test.com", username, "secret", "user"));
+                await _userService.RegisterUserAsync(id, $"{username}@test.com", username, "secret", "user");
             }
 
             for (var i = 1; i <= AdminIds.Count; i++)
             {
                 var id = AdminIds[i-1];
                 var username = $"admin{i}";
-                tasks.Add(_userService.RegisterUserAsync(id, $"{username}@test.com", username, "secret", "admin"));
+                await _userService.RegisterUserAsync(id, $"{username}@test.com", username, "secret", "admin");
             }
-
-            await Task.WhenAll(tasks);
 
             _logger.LogTrace("Users were initialized.");
         }

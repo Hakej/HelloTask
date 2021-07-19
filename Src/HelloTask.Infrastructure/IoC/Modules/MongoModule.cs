@@ -2,6 +2,7 @@ using System.Reflection;
 using Autofac;
 using HelloTask.Infrastructure.Mongo;
 using HelloTask.Infrastructure.Repositories;
+using HelloTask.Infrastructure.Repositories.Mongo;
 using MongoDB.Driver;
 
 namespace HelloTask.Infrastructure.IoC.Modules

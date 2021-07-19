@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using HelloTask.Infrastructure.EF;
 using HelloTask.Infrastructure.Extensions;
 using HelloTask.Infrastructure.Mongo;
 using HelloTask.Infrastructure.Settings;
@@ -23,6 +24,8 @@ namespace HelloTask.Infrastructure.IoC.Modules
                    .SingleInstance();
             builder.RegisterInstance(_configuration.GetSettings<MongoSettings>())
                     .SingleInstance(); 
+            builder.RegisterInstance(_configuration.GetSettings<SqlSettings>())
+                .SingleInstance(); 
         }
     }
 }

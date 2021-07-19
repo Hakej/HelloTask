@@ -3,38 +3,46 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using HelloTask.Core.Domain;
 using HelloTask.Core.Repositories;
-using MongoDB.Driver;
-using MongoDB.Driver.Linq;
+using HelloTask.Infrastructure.EF;
+using Microsoft.EntityFrameworkCore;
 
 namespace HelloTask.Infrastructure.Repositories
 {
-    public class UserRepository : IUserRepository, IMongoRepository
+    public class UserRepository : IUserRepository, ISqlRepository
     {
-        private readonly IMongoDatabase _mongoDatabase;
+        private readonly HelloTaskContext _context;
 
-        public UserRepository(IMongoDatabase mongoDatabase)
+        public UserRepository(HelloTaskContext context)
         {
-            _mongoDatabase = mongoDatabase;
+            _context = context;
         }
 
         public async Task<User> GetAsync(Guid id)
-            => await Users.AsQueryable().Where(x => x.Id == id).FirstOrDefaultAsync();
+            => await _context.Users.SingleOrDefaultAsync(x => x.Id == id);
 
         public async Task<User> GetByEmailAsync(string email)
-            => await Users.AsQueryable().Where(x => x.Email == email).FirstOrDefaultAsync();
+            => await _context.Users.SingleOrDefaultAsync(x => x.Email == email);
 
         public async Task<IEnumerable<User>> GetAllAsync()
-            => await Users.AsQueryable().ToListAsync();
-
+            => await _context.Users.ToListAsync();
+        
         public async Task AddAsync(User user)
-            => await Users.InsertOneAsync(user);
+        {
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
+        }
 
         public async Task UpdateAsync(User user)
-            => await Users.ReplaceOneAsync(x => x.Id == user.Id, user);
-        
+        {
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task DeleteAsync(User user)
-            => await Users.DeleteOneAsync(x => x.Id == user.Id);
-        
-        private IMongoCollection<User> Users => _mongoDatabase.GetCollection<User>("Users");
+        {
+            var foundUser = await GetAsync(user.Id);
+            _context.Users.Remove(foundUser);
+            await _context.SaveChangesAsync();
+        }
     }
 }
